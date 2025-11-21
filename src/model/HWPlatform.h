@@ -5,6 +5,7 @@
 #include "devices/Led.h"
 #include "devices/ServoMotor.h"
 #include "devices/Pir.h"
+#include "devices/Sonar.h"
 class HWPlatform {
 
 public:
@@ -18,6 +19,7 @@ public:
   Led* getGreen2Led();
   ServoMotor* getMotor();
   Pir* getPir();
+  Sonar* getSonar();
 
 private:
   Button* pButton;
@@ -26,6 +28,7 @@ private:
   Led* pGreen2Led;
   ServoMotor* pMotor;
   Pir* pPir;
+  Sonar* pSonar;
 };
 
 #endif

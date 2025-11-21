@@ -19,7 +19,7 @@ void setup() {
   MsgService.init();
   sched.init(50);
 
-  Logger.log(":::::: Sweeping System ::::::");
+  Logger.log(":::::: Drone System ::::::");
   
   pHWPlatform = new HWPlatform();
   pHWPlatform->init();

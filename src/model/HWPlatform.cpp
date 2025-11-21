@@ -17,6 +17,7 @@ HWPlatform::HWPlatform(){
   pGreen2Led = new Led(GREEN2_PIN);
   pMotor = new ServoMotorImpl(MOTOR_PIN);
   pPir = new Pir(PIR_PIN);
+  pSonar = new Sonar(SONAR_TRIG_PIN,SONAR_ECHO_PIN,MAX_SONAR_TIME);
 }
 
 
@@ -42,6 +43,9 @@ ServoMotor* HWPlatform::getMotor(){
 }
 Pir* HWPlatform::getPir(){
   return this->pPir;
+}
+Sonar* HWPlatform::getSonar(){
+  return this->pSonar;
 }
 void HWPlatform::test(){
   bool btPressed = pButton->isPressed();

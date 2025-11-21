@@ -45,6 +45,3 @@ void Scheduler::schedule(){
     }
   }
 }
-void Scheduler::clearTasks(){
-  
-}
