@@ -9,5 +9,6 @@
 #define PIR_PIN 7 // check if it needs to be specific pin for any of these 
 #define SONAR_TRIG_PIN 8
 #define SONAR_ECHO_PIN 10
+#define TEMP_PIN A4
 #define MAX_SONAR_TIME 25
 #endif

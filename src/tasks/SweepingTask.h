@@ -13,7 +13,7 @@ public:
   void tick();
 
 private:  
-  enum class State{IDLE, STARTING, SWEEPING_FWD, SWEEPING_BWD, RESETTING};
+  enum class State{IDLE, SWEEPING_FWD, SWEEPING_BWD, RESETTING};
   void setState(State state);
   long elapsedTimeInState();
   void log(const String& msg);

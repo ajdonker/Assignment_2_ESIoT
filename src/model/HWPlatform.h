@@ -6,6 +6,8 @@
 #include "devices/ServoMotor.h"
 #include "devices/Pir.h"
 #include "devices/Sonar.h"
+#include "devices/TempSensor.h"
+
 class HWPlatform {
 
 public:
@@ -20,6 +22,7 @@ public:
   ServoMotor* getMotor();
   Pir* getPir();
   Sonar* getSonar();
+  TempSensor* getTempSensor();
 
 private:
   Button* pButton;
@@ -29,6 +32,7 @@ private:
   ServoMotor* pMotor;
   Pir* pPir;
   Sonar* pSonar;
+  TempSensor* pTempSensor;
 };
 
 #endif

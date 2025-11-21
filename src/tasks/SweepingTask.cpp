@@ -75,16 +75,6 @@ void SweepingTask::tick(){
         }
         break;       
     }
-    /*
-    case STARTING: {
-        if (this->checkAndSetJustEntered()){
-            Logger.log(F("[SWT] STARTING"));
-        }
-        if (elapsedTimeInState() > START_TIME){
-            setState(SWEEPING_FWD);
-        }
-        break;
-    }*/
     case State::RESETTING: {
         if (this->checkAndSetJustEntered()){
             Logger.log(F("[SWT] RESETTING"));

@@ -7,6 +7,7 @@
 #include "devices/LightSensorImpl.h"
 #include "devices/ServoMotorImpl.h"
 #include "kernel/Logger.h"
+#include "devices/TempSensorTMP36.h"
 
 void wakeUp(){}
 
@@ -18,6 +19,7 @@ HWPlatform::HWPlatform(){
   pMotor = new ServoMotorImpl(MOTOR_PIN);
   pPir = new Pir(PIR_PIN);
   pSonar = new Sonar(SONAR_TRIG_PIN,SONAR_ECHO_PIN,MAX_SONAR_TIME);
+  pTempSensor = new TempSensorTMP36(TEMP_PIN);
 }
 
 
@@ -46,6 +48,9 @@ Pir* HWPlatform::getPir(){
 }
 Sonar* HWPlatform::getSonar(){
   return this->pSonar;
+}
+TempSensor* HWPlatform::getTempSensor(){
+  return this->pTempSensor;
 }
 void HWPlatform::test(){
   bool btPressed = pButton->isPressed();
