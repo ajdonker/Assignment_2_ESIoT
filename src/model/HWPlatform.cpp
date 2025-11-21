@@ -16,6 +16,7 @@ HWPlatform::HWPlatform(){
   pGreen1Led = new Led(GREEN1_PIN);
   pGreen2Led = new Led(GREEN2_PIN);
   pMotor = new ServoMotorImpl(MOTOR_PIN);
+  pPir = new Pir(PIR_PIN);
 }
 
 
@@ -39,7 +40,9 @@ Led*  HWPlatform::getGreen2Led(){
 ServoMotor* HWPlatform::getMotor(){
   return this->pMotor;
 }
-
+Pir* HWPlatform::getPir(){
+  return this->pPir;
+}
 void HWPlatform::test(){
   bool btPressed = pButton->isPressed();
   pRedLed->switchOn();
