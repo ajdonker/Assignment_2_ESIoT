@@ -13,5 +13,5 @@
 #define TEMP_PIN A3
 #define LCD1_PIN A4
 #define LCD2_PIN A5
-#define MAX_SONAR_TIME 25 // check what this time does and should be 
+#define SONAR_TIMEOUT_TIME 20000 // check what this time does and should be 
 #endif

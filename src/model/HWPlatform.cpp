@@ -18,7 +18,7 @@ HWPlatform::HWPlatform(){
   pGreen2Led = new Led(GREEN2_PIN);
   pMotor = new ServoMotorImpl(MOTOR_PIN);
   pPir = new Pir(PIR_PIN);
-  pSonar = new Sonar(SONAR_TRIG_PIN,SONAR_ECHO_PIN,MAX_SONAR_TIME);
+  pSonar = new Sonar(SONAR_ECHO_PIN,SONAR_TRIG_PIN,SONAR_TIMEOUT_TIME);
   pTempSensor = new TempSensorTMP36(TEMP_PIN);
   pLcd = new Lcd(0x27,20,4);
 }
@@ -62,9 +62,13 @@ void HWPlatform::test(){
   pMotor->on();
   pMotor->setPosition(90);
   Logger.log("Button: " + String(btPressed ? "pressed" : " not pressed"));
-  delay(1000);
+  Logger.log("Sonar readout: " + String(pSonar->getDistance()));
+  Logger.log("Temp Sensor readout " + String(pTempSensor->getTemperature()));
+  Logger.log("PIR readout:" + String(pPir->isDetected()));
+  pLcd->printAt(2,2,"HELLO");
+  delay(100);
   pMotor->setPosition(0);
-  delay(1000);
+  delay(100);
   pMotor->off();
   pRedLed->switchOff();
 }

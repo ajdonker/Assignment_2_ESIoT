@@ -50,16 +50,19 @@
       "left": 387.8,
       "attrs": { "color": "green" }
     },
-    { "type": "wokwi-servo", "id": "servo1", "top": 362.8, "left": 739.2, "attrs": {} }
+    { "type": "wokwi-servo", "id": "servo1", "top": 362.8, "left": 739.2, "attrs": {} },
+    {
+      "type": "wokwi-pir-motion-sensor",
+      "id": "pir1",
+      "top": -72.8,
+      "left": -333.78,
+      "attrs": {}
+    }
   ],
   "connections": [
     [ "uno:2", "btn1:2.l", "green", [ "v0" ] ],
     [ "uno:GND.3", "bb1:tn.1", "black", [ "v0" ] ],
     [ "uno:5V", "bb1:tp.1", "red", [ "v115.7", "h-294.4" ] ],
-    [ "btn1:1.l", "bb1:28t.c", "", [ "$bb" ] ],
-    [ "btn1:2.l", "bb1:26t.c", "", [ "$bb" ] ],
-    [ "btn1:1.r", "bb1:28b.h", "", [ "$bb" ] ],
-    [ "btn1:2.r", "bb1:26b.h", "", [ "$bb" ] ],
     [ "btn1:1.l", "bb1:tp.22", "green", [ "v0" ] ],
     [ "ultrasonic1:TRIG", "uno:8", "green", [ "v-451.2", "h412.4" ] ],
     [ "ultrasonic1:ECHO", "uno:10", "green", [ "v-441.6", "h383.2" ] ],
@@ -70,14 +73,6 @@
     [ "ntc1:VCC", "uno:5V", "red", [ "h0" ] ],
     [ "lcd1:GND", "bb1:tn.10", "black", [ "h0" ] ],
     [ "lcd1:VCC", "bb1:tp.8", "red", [ "h0" ] ],
-    [ "lcd1:SDA", "uno:A4", "green", [ "h163.2", "v-393.4" ] ],
-    [ "uno:A5", "lcd1:SCL", "green", [ "v192.5", "h51.7" ] ],
-    [ "led1:A", "bb1:6b.g", "", [ "$bb" ] ],
-    [ "led1:C", "bb1:5b.g", "", [ "$bb" ] ],
-    [ "led2:A", "bb1:44b.g", "", [ "$bb" ] ],
-    [ "led2:C", "bb1:43b.g", "", [ "$bb" ] ],
-    [ "led3:A", "bb1:60b.g", "", [ "$bb" ] ],
-    [ "led3:C", "bb1:59b.g", "", [ "$bb" ] ],
     [ "led1:A", "uno:13", "green", [ "v-220.8", "h451.2" ] ],
     [ "led2:A", "uno:11", "green", [ "v-336", "h-163.2" ] ],
     [ "uno:12", "led3:A", "green", [ "v384.6", "h307.1" ] ],
@@ -86,7 +81,22 @@
     [ "led3:C", "bb1:tn.48", "green", [ "v0" ] ],
     [ "servo1:GND", "uno:GND.3", "black", [ "h0" ] ],
     [ "servo1:V+", "uno:5V", "green", [ "h-393.6", "v-201.5", "h-182.4" ] ],
-    [ "servo1:PWM", "uno:9", "green", [ "h-393.6", "v-364.6" ] ]
+    [ "servo1:PWM", "uno:9", "green", [ "h-393.6", "v-364.6" ] ],
+    [ "btn1:1.l", "bb1:28t.c", "", [ "$bb" ] ],
+    [ "btn1:2.l", "bb1:26t.c", "", [ "$bb" ] ],
+    [ "btn1:1.r", "bb1:28b.h", "", [ "$bb" ] ],
+    [ "btn1:2.r", "bb1:26b.h", "", [ "$bb" ] ],
+    [ "led1:A", "bb1:6b.g", "", [ "$bb" ] ],
+    [ "led1:C", "bb1:5b.g", "", [ "$bb" ] ],
+    [ "led2:A", "bb1:44b.g", "", [ "$bb" ] ],
+    [ "led2:C", "bb1:43b.g", "", [ "$bb" ] ],
+    [ "led3:A", "bb1:60b.g", "", [ "$bb" ] ],
+    [ "led3:C", "bb1:59b.g", "", [ "$bb" ] ],
+    [ "pir1:VCC", "uno:5V", "red", [ "v230.4", "h460.8" ] ],
+    [ "pir1:GND", "uno:GND.3", "black", [ "v172.8", "h258.94" ] ],
+    [ "pir1:OUT", "uno:7", "green", [ "v0" ] ],
+    [ "lcd1:SDA", "uno:A4", "green", [ "h153.6", "v-335.8", "h201.6" ] ],
+    [ "uno:A5", "lcd1:SCL", "green", [ "v163.7", "h-82.7", "v364.8" ] ]
   ],
   "dependencies": {}
 }

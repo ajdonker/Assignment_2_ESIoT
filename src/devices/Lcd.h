@@ -5,13 +5,10 @@ private:
 
 public:
     Lcd(uint8_t address, uint8_t width, uint8_t height)
-        : lcd(address, width, height) {}
-
-    void begin() {
-        lcd.init();
-        lcd.backlight();
-    }
-
+        : lcd(address, width, height) {
+            lcd.init();
+            lcd.backlight();
+        }
     void clear() {
         lcd.clear();
     }
@@ -21,7 +18,6 @@ public:
         lcd.print(text);
     }
 
-    // optional convenience
     void print(const String& text) {
         lcd.print(text);
     }

@@ -30,6 +30,7 @@ void setup() {
   Task* pSweepingTask = new SweepingTask(pHWPlatform->getButton(), pHWPlatform->getMotor(), pContext);
   pSweepingTask->init(50);
 
+  Task* pAlarmTask = new AlarmTask();
   Task* pBlinkingTask = new BlinkingTask(pHWPlatform->getLed(), pContext);
   pBlinkingTask->init(500);
   
@@ -40,7 +41,7 @@ void setup() {
 #ifdef __TESTING_HW__
   /* Testing */
   Task* pTestHWTask = new TestHWTask(pHWPlatform);
-  pTestHWTask->init(50);
+  pTestHWTask->init(500);
   sched.addTask(pTestHWTask);
 #endif
 }
