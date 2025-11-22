@@ -4,8 +4,9 @@
 #include "../constants.h"
 #include "kernel/Logger.h"
 AlarmTask::AlarmTask(Button* pResetButton, Led* pRedLed, Context* pContext, MsgServiceClass* pMsgService,
-TempSensor* pTempSensor):
-pResetButton(pResetButton),pRedLed(pRedLed), pContext(pContext), pMsgService(pMsgService), pTempSensor(pTempSensor)
+TempSensor* pTempSensor, Lcd* pLcd):
+pResetButton(pResetButton),pRedLed(pRedLed), pContext(pContext), pMsgService(pMsgService), pTempSensor(pTempSensor),
+pLcd(pLcd)
 {
     setState(State::IDLE);
 }
@@ -49,6 +50,8 @@ void AlarmTask::tick(){
             case(State::ALARM):{
                 if(this->checkAndSetJustEntered()){
                     pRedLed->switchOn();
+                    pLcd->clear();
+                    pLcd->printAt(2,2,"ALARM");
                     if(pContext->getDroneState() == Context::DroneState::OUTSIDE){
                         pMsgService->sendMsg("ALARM");
                     }

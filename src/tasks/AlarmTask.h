@@ -7,12 +7,13 @@
 #include "devices/Led.h"
 #include "kernel/MsgService.h"
 #include "devices/TempSensor.h"
+#include "devices/Lcd.h"
 #include <Arduino.h>
 
 class AlarmTask : public Task{
 public:
   AlarmTask(Button* pResetButton, Led* pRedLed, Context* pContext, MsgServiceClass* MsgService,
-TempSensor* pTempSensor); 
+TempSensor* pTempSensor, Lcd* pLcd); 
   void tick();
 
 private:  
@@ -33,6 +34,7 @@ private:
   MsgServiceClass* pMsgService;
   Button* pResetButton;
   TempSensor* pTempSensor;
+  Lcd* pLcd;
 };
 
 #endif

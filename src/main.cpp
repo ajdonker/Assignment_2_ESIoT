@@ -31,7 +31,7 @@ void setup() {
   pSweepingTask->init(50);
 
   Task* pBlinkingTask = new BlinkingTask(pHWPlatform->getLed(), pContext);
-  pBlinkingTask->init(100);
+  pBlinkingTask->init(500);
   
   sched.addTask(pSweepingTask);
   sched.addTask(pBlinkingTask);
