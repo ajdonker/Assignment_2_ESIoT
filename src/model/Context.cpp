@@ -27,4 +27,12 @@ void Context::reset(){
   started = false;
   stopped = false;
 }
+void Context::setDroneState(Context::DroneState s)
+{
+  state = s;
+}
+Context::DroneState Context::getDroneState()
+{
+  return state;
+}
 

@@ -57,7 +57,7 @@ public:
     return myPeriod;
   }
 
-  virtual void setActive(bool active){
+  void setActive(bool active){
     timeElapsed = 0;
     this->active = active;
   }

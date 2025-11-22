@@ -7,6 +7,7 @@
 #include "devices/Pir.h"
 #include "devices/Sonar.h"
 #include "devices/TempSensor.h"
+#include "devices/Lcd.h"
 
 class HWPlatform {
 
@@ -23,12 +24,14 @@ public:
   Pir* getPir();
   Sonar* getSonar();
   TempSensor* getTempSensor();
+  Lcd* getLcd();
 
 private:
   Button* pButton;
   Led* pRedLed;
   Led* pGreen1Led;
   Led* pGreen2Led;
+  Lcd* pLcd;
   ServoMotor* pMotor;
   Pir* pPir;
   Sonar* pSonar;

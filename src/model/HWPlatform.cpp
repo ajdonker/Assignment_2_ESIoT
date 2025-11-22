@@ -20,6 +20,7 @@ HWPlatform::HWPlatform(){
   pPir = new Pir(PIR_PIN);
   pSonar = new Sonar(SONAR_TRIG_PIN,SONAR_ECHO_PIN,MAX_SONAR_TIME);
   pTempSensor = new TempSensorTMP36(TEMP_PIN);
+  pLcd = new Lcd(0x27,20,4);
 }
 
 
@@ -51,6 +52,9 @@ Sonar* HWPlatform::getSonar(){
 }
 TempSensor* HWPlatform::getTempSensor(){
   return this->pTempSensor;
+}
+Lcd* HWPlatform::getLcd(){
+  return this->pLcd;
 }
 void HWPlatform::test(){
   bool btPressed = pButton->isPressed();

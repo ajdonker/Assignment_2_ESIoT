@@ -18,7 +18,7 @@ Context* pContext;
 void setup() {
   MsgService.init();
   sched.init(50);
-
+  pContext->reset();
   Logger.log(":::::: Drone System ::::::");
   
   pHWPlatform = new HWPlatform();
