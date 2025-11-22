@@ -42,6 +42,7 @@ private:
   LoggerService* pLogger;
   Lcd* pLcd;
   Sonar* pSonar;
+  TakeOffPattern takeOffPattern;
   int currentPos;
   long distanceLessD1Timestamp;
   bool toBeStopped;

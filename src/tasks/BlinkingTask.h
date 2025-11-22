@@ -8,7 +8,7 @@
 class BlinkingTask: public Task {
 
 public:
-  BlinkingTask(Led* pLed, Context* pContext); 
+  BlinkingTask(Led* pGreen2Led, Context* pContext); 
   void tick();
 
 private:  
@@ -23,7 +23,7 @@ private:
   long stateTimestamp;
   bool justEntered;
 
-  Led* pLed;
+  Led* pGreen2Led;
   Context* pContext;
 };
 

@@ -3,8 +3,8 @@
 #include "config.h"
 #include "kernel/Logger.h"
 
-BlinkingTask::BlinkingTask(Led* pLed, Context* pContext): 
-    pContext(pContext), pLed(pLed){
+BlinkingTask::BlinkingTask(Led* pGreen2Led, Context* pContext): 
+    pContext(pContext), pGreen2Led(pGreen2Led){
     setState(State::IDLE);
 }
   
@@ -12,7 +12,7 @@ void BlinkingTask::tick(){
     switch (state){   
     case State::IDLE: {
         if (this->checkAndSetJustEntered()){
-            pLed->switchOff();
+            pGreen2Led->switchOff();
             Logger.log(F("[BT] IDLE"));
 
         }
@@ -23,7 +23,7 @@ void BlinkingTask::tick(){
     }
     case State::OFF: {
         if (this->checkAndSetJustEntered()){
-            pLed->switchOff();
+            pGreen2Led->switchOff();
             Logger.log(F("[BT] OFF"));
         }
         if (pContext->isStopped()){
@@ -35,7 +35,7 @@ void BlinkingTask::tick(){
     }
     case State::ON: {
         if (this->checkAndSetJustEntered()){
-            pLed->switchOn();
+            pGreen2Led->switchOn();
             Logger.log(F("[BT] ON"));
         }
         if (pContext->isStopped()){

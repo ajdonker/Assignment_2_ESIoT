@@ -9,7 +9,6 @@
 #define START_TIME 100
 #define RESET_TIME 500
 #define TIMEOUT_TIME 25000
-TakeOffPattern takeOffPattern;
 TakeOffTask::TakeOffTask(Sonar *pSonar, ServoMotor *pMotor, Context *pContext, Lcd *pLcd,
                          MsgServiceClass *pMsgService, LoggerService *pLogger) : pSonar(pSonar), pMotor(pMotor), pContext(pContext), pLcd(pLcd), pMsgService(pMsgService), pLogger(pLogger)
 {
@@ -42,6 +41,7 @@ void TakeOffTask::tick()
             {
                 if(pMsgService->receiveMsg(takeOffPattern))
                 {
+                    pMotor->on();
                     pContext->setStarted();
                     pContext->setDroneState(Context::DroneState::TAKE_OFF);
                     setState(State::OPEN_DOOR);
@@ -108,6 +108,7 @@ void TakeOffTask::tick()
 
             if (dt > CLOSE_DOOR_TIME)
             {
+                pMotor->off();
                 setState(State::IDLE);
             }
             break;
@@ -117,6 +118,8 @@ void TakeOffTask::tick()
             if (this->checkAndSetJustEntered())
             {
                 log(F("EXITED"));
+                pLcd->clear();
+                pLcd->printAt(2, 2, F("DRONE_OUT"));
                 pContext->setStopped();
                 pContext->setDroneState(Context::DroneState::OUTSIDE);
             }

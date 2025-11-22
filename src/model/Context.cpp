@@ -3,6 +3,7 @@
 Context::Context(){
   started = false;
   stopped = false;
+  toBeStopped = false;
 }
 
 bool Context::isStarted(){
@@ -12,7 +13,12 @@ bool Context::isStarted(){
 bool Context::isStopped(){
   return stopped;
 }
-
+bool Context::isToBeStopped(){
+  return toBeStopped;
+}
+void Context::setToBeStopped(bool val){
+  toBeStopped = val;
+}
 void Context::setStarted(){
   started = true;
   stopped = false;
