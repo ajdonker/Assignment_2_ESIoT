@@ -1,3 +1,5 @@
+#ifndef __LCD__
+#define __LCD__
 #include <LiquidCrystal_I2C.h> 
 class Lcd {
 private:
@@ -22,3 +24,4 @@ public:
         lcd.print(text);
     }
 };
+#endif

@@ -9,18 +9,13 @@
 #include "model/Context.h"
 #include "devices/Lcd.h"
 #include "devices/Sonar.h"
+#include "TakeOffPattern.h"
 #include <Arduino.h>
-class TakeOffPattern: public Pattern{
-  public:
-    bool match(const Msg& m) override {
-        return m.getContent() == "TAKE_OFF";
-    }
-};
 class TakeOffTask: public Task {
 
 public:
   TakeOffTask(Sonar* pSonar, ServoMotor* pMotor, Context* pContext, Lcd* pLcd,  
-    MsgServiceClass* pMsgService, LoggerService* pLogger); 
+    MsgServiceClass *pMsgService); 
   void tick();
 
 private:  
@@ -39,7 +34,6 @@ private:
   ServoMotor* pMotor;
   Context* pContext;
   MsgServiceClass* pMsgService;
-  LoggerService* pLogger;
   Lcd* pLcd;
   Sonar* pSonar;
   TakeOffPattern takeOffPattern;

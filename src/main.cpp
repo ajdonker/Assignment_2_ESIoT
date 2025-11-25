@@ -1,14 +1,20 @@
+#ifdef __FAKE_UNO__
+#include "../pc/FakeArduino.h"
+#else
 #include <Arduino.h>
+#endif
 #include "config.h"
 #include "kernel/Scheduler.h"
 #include "kernel/Logger.h"
 #include "kernel/MsgService.h"
 #include "model/HWPlatform.h"
 #include "tasks/TestHWTask.h"
+#include "tasks/AlarmTask.h"
+#include "tasks/TakeOffTask.h"
 #include "tasks/SweepingTask.h"
 #include "tasks/BlinkingTask.h"
 
-#define __TESTING_HW__
+//#define __TESTING_HW__
 
 Scheduler sched;
 
@@ -18,6 +24,7 @@ Context* pContext;
 void setup() {
   MsgService.init();
   sched.init(50);
+  pContext = new Context();
   pContext->reset();
   Logger.log(":::::: Drone System ::::::");
   
@@ -25,16 +32,16 @@ void setup() {
   pHWPlatform->init();
 
 #ifndef __TESTING_HW__
-  pContext = new Context();
+  Task* pTakeOffTask = new TakeOffTask(pHWPlatform->getSonar(),pHWPlatform->getMotor(),pContext,pHWPlatform->getLcd(),
+&MsgService);
 
-  Task* pSweepingTask = new SweepingTask(pHWPlatform->getButton(), pHWPlatform->getMotor(), pContext);
-  pSweepingTask->init(50);
-
-  Task* pAlarmTask = new AlarmTask();
-  Task* pBlinkingTask = new BlinkingTask(pHWPlatform->getLed(), pContext);
+  Task* pAlarmTask = new AlarmTask(pHWPlatform->getButton(),pHWPlatform->getRedLed(),pContext,&MsgService,
+pHWPlatform->getTempSensor(),pHWPlatform->getLcd());
+  Task* pBlinkingTask = new BlinkingTask(pHWPlatform->getGreen2Led(), pContext);
   pBlinkingTask->init(500);
   
-  sched.addTask(pSweepingTask);
+  sched.addTask(pTakeOffTask);
+  sched.addTask(pAlarmTask);
   sched.addTask(pBlinkingTask);
 #endif
 
@@ -47,5 +54,6 @@ void setup() {
 }
 
 void loop() {
+    MsgService.SerialEvent();
     sched.schedule();
 }

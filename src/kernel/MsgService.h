@@ -1,7 +1,10 @@
 #ifndef __MSGSERVICE__
 #define __MSGSERVICE__
-
+#ifdef __FAKE_UNO__
+#include "FakeArduino.h"
+#else
 #include "Arduino.h"
+#endif
 
 class Msg {
   String content;
@@ -11,14 +14,14 @@ public:
     this->content = content;
   }
   
-  String getContent(){
+  String getContent() const{
     return content;
   }
 };
 
 class Pattern {
 public:
-  virtual boolean match(const Msg& m) = 0;  
+  virtual bool match(const Msg& m) = 0;  
 };
 
 class MsgServiceClass {
@@ -37,6 +40,7 @@ public:
   Msg* receiveMsg(Pattern& pattern);
   
   void sendMsg(const String& msg);
+  void SerialEvent();
 };
 
 extern MsgServiceClass MsgService;
