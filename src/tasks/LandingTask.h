@@ -1,5 +1,5 @@
-#ifndef __TAKE_OFF_TASK__
-#define __TAKE_OFF_TASK__
+#ifndef __LANDING_TASK__
+#define __LANDING_TASK__
 
 #include "kernel/Task.h"
 #include "kernel/MsgService.h"
@@ -9,17 +9,17 @@
 #include "model/Context.h"
 #include "devices/Lcd.h"
 #include "devices/Sonar.h"
-#include "TakeOffPattern.h"
+#include "LandingPattern.h"
 #include <Arduino.h>
-class TakeOffTask: public Task {
+class LandingTask: public Task {
 
 public:
-  TakeOffTask(Sonar* pSonar, ServoMotor* pMotor, Context* pContext, Lcd* pLcd,  
+  LandingTask(Sonar* pSonar, ServoMotor* pMotor, Context* pContext, Lcd* pLcd,  
     MsgServiceClass *pMsgService); 
   void tick();
 
 private:  
-  enum class State{IDLE, OPEN_DOOR, WAIT, TIMEOUT, EXITED};
+  enum class State{IDLE, OPEN_DOOR, WAIT, TIMEOUT, ENTERED};
   void setState(State state);
   long elapsedTimeInState();
   void log(const String& msg);
@@ -36,9 +36,9 @@ private:
   MsgServiceClass* pMsgService;
   Lcd* pLcd;
   Sonar* pSonar;
-  TakeOffPattern takeOffPattern;
+  LandingPattern* landingPattern;
   int currentPos;
-  long distanceLessD1Timestamp;
+  long distanceGreaterD2Timestamp;
   bool toBeStopped;
 };
 

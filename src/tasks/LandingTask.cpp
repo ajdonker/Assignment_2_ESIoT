@@ -1,4 +1,4 @@
-#include "TakeOffTask.h"
+#include "LandingTask.h"
 #include <Arduino.h>
 #include "config.h"
 #include "../constants.h"
@@ -9,21 +9,21 @@
 #define START_TIME 100
 #define RESET_TIME 500
 #define TIMEOUT_TIME 25000
-TakeOffTask::TakeOffTask(Sonar *pSonar, ServoMotor *pMotor, Context *pContext, Lcd *pLcd,
+LandingTask::LandingTask(Sonar *pSonar, ServoMotor *pMotor, Context *pContext, Lcd *pLcd,
                          MsgServiceClass *pMsgService) : pSonar(pSonar), pMotor(pMotor), pContext(pContext), pLcd(pLcd), pMsgService(pMsgService)
 {
     setState(State::IDLE);
 }
-void TakeOffTask::log(const String &msg)
+void LandingTask::log(const String &msg)
 {
-    Logger.log("[TO]:");
+    Logger.log("[LA]:");
     Logger.log(msg);
 }
 // DroneState{INSIDE,TAKE_OFF,OUTSIDE,LANDING}
 //  {IDLE, OPEN_DOOR, WAIT, TIMEOUT, EXITED}
-void TakeOffTask::tick()
+void LandingTask::tick()
 {
-    if (!isActive() && pContext->getDroneState() == Context::DroneState::INSIDE)
+    if (!isActive() && pContext->getDroneState() == Context::DroneState::OUTSIDE)
     {
         setActive(true);
     }
@@ -43,7 +43,7 @@ void TakeOffTask::tick()
                 {
                     pMotor->on();
                     pContext->setStarted();
-                    pContext->setDroneState(Context::DroneState::TAKE_OFF);
+                    pContext->setDroneState(Context::DroneState::LANDING);
                     setState(State::OPEN_DOOR);
                 }
             }
@@ -56,7 +56,7 @@ void TakeOffTask::tick()
                 log(F("OPEN_DOOR"));
                 //pContext->setDroneState(Context::DroneState::TAKE_OFF);
                 pLcd->clear();
-                pLcd->printAt(2, 2, F("TAKE_OFF"));
+                pLcd->printAt(2, 2, F("LANDING"));
             }
 
             /* update motor pos*/
@@ -76,17 +76,17 @@ void TakeOffTask::tick()
             if (this->checkAndSetJustEntered())
             {
                 log(F("WAIT"));
-                distanceLessD1Timestamp = 0;
+                distanceGreaterD2Timestamp = 0;
             }
             long dt = elapsedTimeInState();
             float readOut = pSonar->getDistance();
-            if (readOut < D1)
+            if (readOut >= D2)
             {
-                distanceLessD1Timestamp = dt;
+                distanceGreaterD2Timestamp = dt;
             }
-            if (dt - distanceLessD1Timestamp > T1)
+            if (dt - distanceGreaterD2Timestamp > T2)
             {
-                setState(State::EXITED);
+                setState(State::ENTERED);
             }
             if (dt > TIMEOUT_TIME)
             {
@@ -135,19 +135,19 @@ void TakeOffTask::tick()
     }
 }
 
-void TakeOffTask::setState(State s)
+void LandingTask::setState(State s)
 {
     state = s;
     stateTimestamp = millis();
     justEntered = true;
 }
 
-long TakeOffTask::elapsedTimeInState()
+long LandingTask::elapsedTimeInState()
 {
     return millis() - stateTimestamp;
 }
 
-bool TakeOffTask::checkAndSetJustEntered()
+bool LandingTask::checkAndSetJustEntered()
 {
     bool bak = justEntered;
     if (justEntered)
