@@ -10,7 +10,11 @@
 #include "devices/Lcd.h"
 #include "devices/Sonar.h"
 #include "LandingPattern.h"
-#include <Arduino.h>
+#ifdef __FAKE_UNO__
+#include "FakeArduino.h"
+#else
+#include "Arduino.h"
+#endif
 class LandingTask: public Task {
 
 public:
@@ -36,9 +40,10 @@ private:
   MsgServiceClass* pMsgService;
   Lcd* pLcd;
   Sonar* pSonar;
-  LandingPattern* landingPattern;
+  LandingPattern landingPattern;
   int currentPos;
   long distanceGreaterD2Timestamp;
+  long landingMsgTimestamp;
   bool toBeStopped;
 };
 

@@ -1,5 +1,9 @@
 #include "LandingTask.h"
-#include <Arduino.h>
+#ifdef __FAKE_UNO__
+#include "FakeArduino.h"
+#else
+#include "Arduino.h"
+#endif
 #include "config.h"
 #include "../constants.h"
 // #include "kernel/Logger.h"
@@ -9,6 +13,7 @@
 #define START_TIME 100
 #define RESET_TIME 500
 #define TIMEOUT_TIME 25000
+#define LANDING_MSG_PERIOD 2000
 LandingTask::LandingTask(Sonar *pSonar, ServoMotor *pMotor, Context *pContext, Lcd *pLcd,
                          MsgServiceClass *pMsgService) : pSonar(pSonar), pMotor(pMotor), pContext(pContext), pLcd(pLcd), pMsgService(pMsgService)
 {
@@ -16,11 +21,11 @@ LandingTask::LandingTask(Sonar *pSonar, ServoMotor *pMotor, Context *pContext, L
 }
 void LandingTask::log(const String &msg)
 {
-    Logger.log("[LA]:");
+    Logger.log("[land]:");
     Logger.log(msg);
 }
 // DroneState{INSIDE,TAKE_OFF,OUTSIDE,LANDING}
-//  {IDLE, OPEN_DOOR, WAIT, TIMEOUT, EXITED}
+//  {IDLE, OPEN_DOOR, WAIT, TIMEOUT, ENTERED}
 void LandingTask::tick()
 {
     if (!isActive() && pContext->getDroneState() == Context::DroneState::OUTSIDE)
@@ -39,7 +44,7 @@ void LandingTask::tick()
             }
             if(pMsgService->isMsgAvailable())
             {
-                if(pMsgService->receiveMsg(takeOffPattern))
+                if(pMsgService->receiveMsg(landingPattern))
                 {
                     pMotor->on();
                     pContext->setStarted();
@@ -54,7 +59,6 @@ void LandingTask::tick()
             if (this->checkAndSetJustEntered())
             {
                 log(F("OPEN_DOOR"));
-                //pContext->setDroneState(Context::DroneState::TAKE_OFF);
                 pLcd->clear();
                 pLcd->printAt(2, 2, F("LANDING"));
             }
@@ -77,9 +81,15 @@ void LandingTask::tick()
             {
                 log(F("WAIT"));
                 distanceGreaterD2Timestamp = 0;
+                landingMsgTimestamp = 0;
             }
             long dt = elapsedTimeInState();
             float readOut = pSonar->getDistance();
+            if(dt - landingMsgTimestamp > LANDING_MSG_PERIOD)
+            {
+                landingMsgTimestamp = dt;
+                pMsgService->sendMsg("DIST:"+ String(readOut));
+            }
             if (readOut >= D2)
             {
                 distanceGreaterD2Timestamp = dt;
@@ -113,13 +123,13 @@ void LandingTask::tick()
             }
             break;
         }
-        case State::EXITED:
+        case State::ENTERED:
         {
             if (this->checkAndSetJustEntered())
             {
-                log(F("EXITED"));
+                log(F("ENTERED"));
                 pLcd->clear();
-                pLcd->printAt(2, 2, F("DRONE_OUT"));
+                pLcd->printAt(2, 2, F("DRONE_INSIDE"));
                 pContext->setStopped();
                 pContext->setDroneState(Context::DroneState::OUTSIDE);
             }

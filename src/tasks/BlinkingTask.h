@@ -4,7 +4,11 @@
 #include "kernel/Task.h"
 #include "model/Context.h"
 #include "devices/Led.h"
-#include <Arduino.h>
+#ifdef __FAKE_UNO__
+#include "FakeArduino.h"
+#else
+#include "Arduino.h"
+#endif
 class BlinkingTask: public Task {
 
 public:

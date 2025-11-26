@@ -1,5 +1,9 @@
 #include "tasks/AlarmTask.h"
-#include <Arduino.h>
+#ifdef __FAKE_UNO__
+#include "FakeArduino.h"
+#else
+#include "Arduino.h"
+#endif
 #include "config.h"
 #include "../constants.h"
 #include "kernel/Logger.h"
@@ -18,6 +22,7 @@ void AlarmTask::tick(){
             case(State::IDLE):{
                 if(this->checkAndSetJustEntered()){
                     TempLesserT1Timestamp = 0;
+                    pMsgService->sendMsg("HANGAR:IDLE");
                 }
                 long dt = elapsedTimeInState();
                 float TempReadout = pTempSensor->getTemperature();
@@ -34,6 +39,7 @@ void AlarmTask::tick(){
             case(State::PRE_ALARM):{
                 if(this->checkAndSetJustEntered()){
                     pContext->setToBeStopped(true);
+                    pMsgService->sendMsg("HANGAR:PRE_ALARM");
                 }
                 long dt = elapsedTimeInState();
                 float TempReadout = pTempSensor->getTemperature();
@@ -52,8 +58,9 @@ void AlarmTask::tick(){
                     pRedLed->switchOn();
                     pLcd->clear();
                     pLcd->printAt(2,2,"ALARM");
+                    pMsgService->sendMsg("HANGAR:ALARM");
                     if(pContext->getDroneState() == Context::DroneState::OUTSIDE){
-                        pMsgService->sendMsg("ALARM");
+                        pMsgService->sendMsg("ALERT");
                     }
                 }
                 

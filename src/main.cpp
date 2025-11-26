@@ -20,7 +20,9 @@ Scheduler sched;
 
 HWPlatform* pHWPlatform;
 Context* pContext;
-
+void onDroneStateChangedHandler(Context::DroneState s) {
+    MsgService.sendMsg("DRONE:" + String(Context::droneStateName(s)));
+}
 void setup() {
   MsgService.init();
   sched.init(50);
@@ -28,6 +30,7 @@ void setup() {
   pContext->reset();
   Logger.log(":::::: Drone System ::::::");
   
+  pContext->onDroneStateChanged = onDroneStateChangedHandler;
   pHWPlatform = new HWPlatform();
   pHWPlatform->init();
 

@@ -1,5 +1,9 @@
 #include "TakeOffTask.h"
-#include <Arduino.h>
+#ifdef __FAKE_UNO__
+#include "FakeArduino.h"
+#else
+#include "Arduino.h"
+#endif
 #include "config.h"
 #include "../constants.h"
 // #include "kernel/Logger.h"

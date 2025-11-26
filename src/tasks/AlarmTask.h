@@ -8,7 +8,11 @@
 #include "kernel/MsgService.h"
 #include "devices/TempSensor.h"
 #include "devices/Lcd.h"
-#include <Arduino.h>
+#ifdef __FAKE_UNO__
+#include "FakeArduino.h"
+#else
+#include "Arduino.h"
+#endif
 
 class AlarmTask : public Task{
 public:

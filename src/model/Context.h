@@ -7,6 +7,9 @@ public:
   Context();
   enum class DroneState{INSIDE,TAKE_OFF,OUTSIDE,LANDING};
 
+  typedef void (*DroneStateChangedCallback)(DroneState);
+  DroneStateChangedCallback onDroneStateChanged;
+
   void setStarted();
   void setStopped();
 
@@ -14,6 +17,7 @@ public:
   bool isStopped();
   void reset();
   void setDroneState(DroneState s);
+  static const char* droneStateName(DroneState s);
   bool isToBeStopped();
   void setToBeStopped(bool val);
   DroneState getDroneState();

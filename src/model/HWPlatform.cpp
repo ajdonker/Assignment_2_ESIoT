@@ -1,5 +1,9 @@
 #include "HWPlatform.h"
-#include <Arduino.h>
+#ifdef __FAKE_UNO__
+#include "FakeArduino.h"
+#else
+#include "Arduino.h"
+#endif
 #include "devices/ButtonImpl.h"
 #include "kernel/MsgService.h"
 #include "config.h"

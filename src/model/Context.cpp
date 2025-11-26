@@ -36,6 +36,18 @@ void Context::reset(){
 void Context::setDroneState(Context::DroneState s)
 {
   state = s;
+  if (onDroneStateChanged) {
+        onDroneStateChanged(s);
+  }
+}
+const char* Context::droneStateName(Context::DroneState s){
+  switch(s) {
+        case DroneState::INSIDE:     return "DRONE:INSIDE";
+        case DroneState::TAKE_OFF:   return "DRONE:TAKE_OFF";
+        case DroneState::OUTSIDE:    return "DRONE:OUTSIDE";
+        case DroneState::LANDING:    return "DRONE:LANDING";
+    }
+    return "UNKNOWN";
 }
 Context::DroneState Context::getDroneState()
 {

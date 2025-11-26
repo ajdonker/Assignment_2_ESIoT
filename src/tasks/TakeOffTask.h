@@ -10,7 +10,11 @@
 #include "devices/Lcd.h"
 #include "devices/Sonar.h"
 #include "TakeOffPattern.h"
-#include <Arduino.h>
+#ifdef __FAKE_UNO__
+#include "FakeArduino.h"
+#else
+#include "Arduino.h"
+#endif
 class TakeOffTask: public Task {
 
 public:
