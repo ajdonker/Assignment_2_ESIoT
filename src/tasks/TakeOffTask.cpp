@@ -13,6 +13,7 @@
 #define START_TIME 100
 #define RESET_TIME 500
 #define TIMEOUT_TIME 25000
+
 TakeOffTask::TakeOffTask(Sonar *pSonar, ServoMotor *pMotor, Context *pContext, Lcd *pLcd,
                          MsgServiceClass *pMsgService) : pSonar(pSonar), pMotor(pMotor), pContext(pContext), pLcd(pLcd), pMsgService(pMsgService)
 {
@@ -27,7 +28,7 @@ void TakeOffTask::log(const String &msg)
 //  {IDLE, OPEN_DOOR, WAIT, TIMEOUT, EXITED}
 void TakeOffTask::tick()
 {
-    if (!isActive() && pContext->getDroneState() == Context::DroneState::INSIDE)
+    if (!pContext->isToBeStopped() && !isActive() && pContext->getDroneState() == Context::DroneState::INSIDE)
     {
         setActive(true);
     }

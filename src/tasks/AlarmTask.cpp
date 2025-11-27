@@ -7,6 +7,7 @@
 #include "config.h"
 #include "../constants.h"
 #include "kernel/Logger.h"
+
 AlarmTask::AlarmTask(Button* pResetButton, Led* pRedLed, Context* pContext, MsgServiceClass* pMsgService,
 TempSensor* pTempSensor, Lcd* pLcd):
 pResetButton(pResetButton),pRedLed(pRedLed), pContext(pContext), pMsgService(pMsgService), pTempSensor(pTempSensor),

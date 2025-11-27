@@ -34,7 +34,7 @@ private:
   Lcd* pLcd;
   ServoMotor* pMotor;
   Pir* pPir;
-  Sonar* pSonar;
+  ProximitySensor* pSonar;
   TempSensor* pTempSensor;
 };
 
