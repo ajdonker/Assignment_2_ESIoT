@@ -1,0 +1,57 @@
+#include "tasks/OnOffTask.h"
+#ifdef __FAKE_UNO__
+#include "FakeArduino.h"
+#else
+#include "Arduino.h"
+#endif
+#include "config.h"
+#include "kernel/Logger.h"
+
+OnOffTask::OnOffTask(Led* pGreen1Led, Context* pContext): 
+    pContext(pContext), pGreen1Led(pGreen1Led){
+    setState(State::OFF);
+}
+  
+void OnOffTask::tick(){
+    switch (state){   
+    case State::OFF: {
+        if (this->checkAndSetJustEntered()){
+            pGreen1Led->switchOff();
+            Logger.log(F("[OO] OFF"));
+        }
+        if (pContext->getDroneState() == Context::DroneState::INSIDE){
+            setState(State::ON);
+        } 
+        break;
+    }
+    case State::ON: {
+        if (this->checkAndSetJustEntered()){
+            pGreen1Led->switchOn();
+            Logger.log(F("[OO] ON"));
+        }
+        if (pContext->getDroneState() != Context::DroneState::INSIDE){
+            setState(State::OFF);
+        } 
+        break;
+    }
+    }
+}
+
+
+void OnOffTask::setState(State s){
+    state = s;
+    stateTimestamp = millis();
+    justEntered = true;
+}
+
+long OnOffTask::elapsedTimeInState(){
+    return millis() - stateTimestamp;
+}
+
+bool OnOffTask::checkAndSetJustEntered(){
+    bool bak = justEntered;
+    if (justEntered){
+      justEntered = false;
+    }
+    return bak;
+}

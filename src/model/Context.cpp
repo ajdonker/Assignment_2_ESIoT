@@ -35,7 +35,7 @@ void Context::reset(){
 }
 void Context::setDroneState(Context::DroneState s)
 {
-  state = s;
+  droneState = s;
   if (onDroneStateChanged) {
         onDroneStateChanged(s);
   }
@@ -51,6 +51,25 @@ const char* Context::droneStateName(Context::DroneState s){
 }
 Context::DroneState Context::getDroneState()
 {
-  return state;
+  return droneState;
+}
+Context::HangarState Context::getHangarState()
+{
+  return hangarState;
+}
+void Context::setHangarState(Context::HangarState s)
+{
+  hangarState = s;
+  if(onHangarStateChanged){
+    onHangarStateChanged(s);
+  }
+}
+const char* Context::hangarStateName(Context::HangarState s){
+  switch(s) {
+        case HangarState::IDLE:     return "HANGAR:IDLE";
+        case HangarState::PRE_ALARM:   return "HANGAR:PRE_ALARM";
+        case HangarState::ALARM:    return "HANGAR:ALARM";
+    }
+    return "UNKNOWN";
 }
 

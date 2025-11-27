@@ -22,7 +22,8 @@ void AlarmTask::tick(){
             case(State::IDLE):{
                 if(this->checkAndSetJustEntered()){
                     TempLesserT1Timestamp = 0;
-                    pMsgService->sendMsg("HANGAR:IDLE");
+                    //pMsgService->sendMsg("HANGAR:IDLE");
+                    pContext->setHangarState(Context::HangarState::IDLE);
                 }
                 long dt = elapsedTimeInState();
                 float TempReadout = pTempSensor->getTemperature();
@@ -39,7 +40,7 @@ void AlarmTask::tick(){
             case(State::PRE_ALARM):{
                 if(this->checkAndSetJustEntered()){
                     pContext->setToBeStopped(true);
-                    pMsgService->sendMsg("HANGAR:PRE_ALARM");
+                    pContext->setHangarState(Context::HangarState::PRE_ALARM);
                 }
                 long dt = elapsedTimeInState();
                 float TempReadout = pTempSensor->getTemperature();
@@ -58,7 +59,7 @@ void AlarmTask::tick(){
                     pRedLed->switchOn();
                     pLcd->clear();
                     pLcd->printAt(2,2,"ALARM");
-                    pMsgService->sendMsg("HANGAR:ALARM");
+                    pContext->setHangarState(Context::HangarState::ALARM);
                     if(pContext->getDroneState() == Context::DroneState::OUTSIDE){
                         pMsgService->sendMsg("ALERT");
                     }
