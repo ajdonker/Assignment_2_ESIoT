@@ -13,6 +13,7 @@ TempSensor* pTempSensor, Lcd* pLcd):
 pResetButton(pResetButton),pRedLed(pRedLed), pContext(pContext), pMsgService(pMsgService), pTempSensor(pTempSensor),
 pLcd(pLcd)
 {
+    setActive(true);
     setState(State::IDLE);
 }
 
@@ -25,6 +26,7 @@ void AlarmTask::tick(){
                     TempLesserT1Timestamp = 0;
                     //pMsgService->sendMsg("HANGAR:IDLE");
                     pContext->setHangarState(Context::HangarState::IDLE);
+                    Logger.log("[AA]:IDLE");
                 }
                 long dt = elapsedTimeInState();
                 float TempReadout = pTempSensor->getTemperature();
@@ -42,6 +44,7 @@ void AlarmTask::tick(){
                 if(this->checkAndSetJustEntered()){
                     pContext->setToBeStopped(true);
                     pContext->setHangarState(Context::HangarState::PRE_ALARM);
+                    Logger.log("[AA]:PRE_ALARM");
                 }
                 long dt = elapsedTimeInState();
                 float TempReadout = pTempSensor->getTemperature();
@@ -58,6 +61,7 @@ void AlarmTask::tick(){
             case(State::ALARM):{
                 if(this->checkAndSetJustEntered()){
                     pRedLed->switchOn();
+                    Logger.log("[AA]:ALARM");
                     pLcd->clear();
                     pLcd->printAt(2,2,"ALARM");
                     pContext->setHangarState(Context::HangarState::ALARM);
@@ -69,6 +73,7 @@ void AlarmTask::tick(){
                 if(pResetButton->isPressed())
                 {
                     pRedLed->switchOff();
+                    pLcd->clear();
                     setState(State::IDLE);
                 }
                 break;

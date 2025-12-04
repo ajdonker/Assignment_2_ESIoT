@@ -4,6 +4,8 @@ Context::Context(){
   started = false;
   stopped = false;
   toBeStopped = false;
+  setDroneState(Context::DroneState::INSIDE);
+  setHangarState(Context::HangarState::IDLE);
 }
 
 bool Context::isStarted(){
@@ -32,6 +34,8 @@ void Context::setStopped(){
 void Context::reset(){
   started = false;
   stopped = false;
+  setDroneState(Context::DroneState::INSIDE);
+  setHangarState(Context::HangarState::IDLE);
 }
 void Context::setDroneState(Context::DroneState s)
 {

@@ -19,9 +19,11 @@ void OnOffTask::tick(){
             pGreen1Led->switchOff();
             Logger.log(F("[OO] OFF"));
         }
-        if (pContext->getDroneState() == Context::DroneState::INSIDE){
-            setState(State::ON);
-        } 
+        if(pContext->getHangarState() != Context::HangarState::ALARM){
+            if (pContext->getDroneState() == Context::DroneState::INSIDE){
+                setState(State::ON);
+            } 
+        }
         break;
     }
     case State::ON: {
@@ -29,7 +31,10 @@ void OnOffTask::tick(){
             pGreen1Led->switchOn();
             Logger.log(F("[OO] ON"));
         }
-        if (pContext->getDroneState() != Context::DroneState::INSIDE){
+        if(pContext->getHangarState() == Context::HangarState::ALARM){
+            setState(State::OFF);
+        }
+        else if(pContext->getDroneState() != Context::DroneState::INSIDE){
             setState(State::OFF);
         } 
         break;

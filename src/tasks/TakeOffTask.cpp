@@ -21,8 +21,7 @@ TakeOffTask::TakeOffTask(Sonar *pSonar, ServoMotor *pMotor, Context *pContext, L
 }
 void TakeOffTask::log(const String &msg)
 {
-    Logger.log("[TO]:");
-    Logger.log(msg);
+    Logger.log("[TO]:"+msg);
 }
 // DroneState{INSIDE,TAKE_OFF,OUTSIDE,LANDING}
 //  {IDLE, OPEN_DOOR, WAIT, TIMEOUT, EXITED}
@@ -32,111 +31,108 @@ void TakeOffTask::tick()
     {
         setActive(true);
     }
-    if (isActive())
+    switch (state)
     {
-        switch (state)
+    case State::IDLE:
+    {
+        if(this->checkAndSetJustEntered())
         {
-        case State::IDLE:
+            log(F("IDLE"));
+        }
+        if(pMsgService->isMsgAvailable())
         {
-            if(this->checkAndSetJustEntered())
+            if(pMsgService->receiveMsg(takeOffPattern))
             {
-                log(F("IDLE"));
+                pMotor->on();
+                pContext->setStarted();
+                pContext->setDroneState(Context::DroneState::TAKE_OFF);
+                setState(State::OPEN_DOOR);
             }
-            if(pMsgService->isMsgAvailable())
-            {
-                if(pMsgService->receiveMsg(takeOffPattern))
-                {
-                    pMotor->on();
-                    pContext->setStarted();
-                    pContext->setDroneState(Context::DroneState::TAKE_OFF);
-                    setState(State::OPEN_DOOR);
-                }
-            }
+        }
+    break;
+    }
+    case State::OPEN_DOOR:
+    {
+        if (this->checkAndSetJustEntered())
+        {
+            log(F("OPEN_DOOR"));
+            //pContext->setDroneState(Context::DroneState::TAKE_OFF);
+            pLcd->clear();
+            pLcd->printAt(2, 2, F("TAKE_OFF"));
+        }
+
+        /* update motor pos*/
+
+        long dt = elapsedTimeInState();
+        currentPos = (((float)dt) / OPEN_DOOR_TIME) * 180;
+        pMotor->setPosition(currentPos);
+
+        if (dt > OPEN_DOOR_TIME)
+        {
+            setState(State::WAIT);
+        }
         break;
-        }
-        case State::OPEN_DOOR:
+    }
+    case State::WAIT:
+    {
+        if (this->checkAndSetJustEntered())
         {
-            if (this->checkAndSetJustEntered())
-            {
-                log(F("OPEN_DOOR"));
-                //pContext->setDroneState(Context::DroneState::TAKE_OFF);
-                pLcd->clear();
-                pLcd->printAt(2, 2, F("TAKE_OFF"));
-            }
-
-            /* update motor pos*/
-
-            long dt = elapsedTimeInState();
-            currentPos = (((float)dt) / OPEN_DOOR_TIME) * 180;
-            pMotor->setPosition(currentPos);
-
-            if (dt > OPEN_DOOR_TIME)
-            {
-                setState(State::WAIT);
-            }
-            break;
+            log(F("WAIT"));
+            distanceLessD1Timestamp = 0;
         }
-        case State::WAIT:
+        long dt = elapsedTimeInState();
+        float readOut = pSonar->getDistance();
+        if (readOut < D1)
         {
-            if (this->checkAndSetJustEntered())
-            {
-                log(F("WAIT"));
-                distanceLessD1Timestamp = 0;
-            }
-            long dt = elapsedTimeInState();
-            float readOut = pSonar->getDistance();
-            if (readOut < D1)
-            {
-                distanceLessD1Timestamp = dt;
-            }
-            if (dt - distanceLessD1Timestamp > T1)
-            {
-                setState(State::EXITED);
-            }
-            if (dt > TIMEOUT_TIME)
-            {
-                setState(State::TIMEOUT);
-            }
-            break;
+            distanceLessD1Timestamp = dt;
         }
-        case State::TIMEOUT:
+        if (dt - distanceLessD1Timestamp > T1)
         {
-            if (this->checkAndSetJustEntered())
-            {
-                log(F("TIMEOUT"));
-            }
-            /* update motor pos*/
-            // close door needed
-            long dt = elapsedTimeInState();
-            currentPos = (((float)dt) / CLOSE_DOOR_TIME) * 180;
-            pMotor->setPosition(currentPos);
+            setState(State::EXITED);
+        }
+        if (dt > TIMEOUT_TIME)
+        {
+            setState(State::TIMEOUT);
+        }
+        break;
+    }
+    case State::TIMEOUT:
+    {
+        if (this->checkAndSetJustEntered())
+        {
+            log(F("TIMEOUT"));
+        }
+        /* update motor pos*/
+        // close door needed
+        long dt = elapsedTimeInState();
+        currentPos = (((float)dt) / CLOSE_DOOR_TIME) * 180;
+        pMotor->setPosition(currentPos);
 
-            if (dt > CLOSE_DOOR_TIME)
-            {
-                pMotor->off();
-                setState(State::IDLE);
-            }
-            break;
-        }
-        case State::EXITED:
+        if (dt > CLOSE_DOOR_TIME)
         {
-            if (this->checkAndSetJustEntered())
-            {
-                log(F("EXITED"));
-                pLcd->clear();
-                pLcd->printAt(2, 2, F("DRONE_OUT"));
-                pContext->setStopped();
-                pContext->setDroneState(Context::DroneState::OUTSIDE);
-            }
-            if (elapsedTimeInState() > RESET_TIME)
-            {
-                pMotor->off();
-                setState(State::IDLE);
-                setActive(false);
-            }
-            break;
+            pMotor->off();
+            setState(State::IDLE);
         }
+        break;
+    }
+    case State::EXITED:
+    {
+        if (this->checkAndSetJustEntered())
+        {
+            log(F("EXITED"));
+            pLcd->clear();
+            pLcd->printAt(2, 2, F("DRONE_OUT"));
+            pContext->setStopped();
+            pContext->setDroneState(Context::DroneState::OUTSIDE);
         }
+        if (elapsedTimeInState() > RESET_TIME)
+        {
+            pMotor->off();
+            setState(State::IDLE);
+            setActive(false);
+        }
+        break;
+    }
     }
 }
 

@@ -8,6 +8,7 @@
 
 
 TestHWTask::TestHWTask(HWPlatform* pHW): pHW(pHW){
+    setActive(true);
 }
   
 void TestHWTask::tick(){

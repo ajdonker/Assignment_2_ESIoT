@@ -9,6 +9,7 @@
 
 BlinkingTask::BlinkingTask(Led* pGreen2Led, Context* pContext): 
     pContext(pContext), pGreen2Led(pGreen2Led){
+    setActive(true);
     setState(State::IDLE);
 }
   

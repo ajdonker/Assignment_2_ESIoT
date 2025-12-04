@@ -13,6 +13,7 @@
 #include "tasks/TakeOffTask.h"
 #include "tasks/SweepingTask.h"
 #include "tasks/BlinkingTask.h"
+#include "tasks/OnOffTask.h"
 
 //#define __TESTING_HW__
 
@@ -35,14 +36,18 @@ void setup() {
   pHWPlatform->init();
 
 #ifndef __TESTING_HW__
+  Task* pOnOffTask = new OnOffTask(pHWPlatform->getGreen1Led(),pContext);
+  pOnOffTask->init();
   Task* pTakeOffTask = new TakeOffTask(pHWPlatform->getSonar(),pHWPlatform->getMotor(),pContext,pHWPlatform->getLcd(),
-&MsgService);
-
+  &MsgService);
+  pTakeOffTask->init();
   Task* pAlarmTask = new AlarmTask(pHWPlatform->getButton(),pHWPlatform->getRedLed(),pContext,&MsgService,
 pHWPlatform->getTempSensor(),pHWPlatform->getLcd());
+  pAlarmTask->init();
   Task* pBlinkingTask = new BlinkingTask(pHWPlatform->getGreen2Led(), pContext);
   pBlinkingTask->init(500);
-  
+  Logger.log("tasks are initialized");
+  sched.addTask(pOnOffTask);
   sched.addTask(pTakeOffTask);
   sched.addTask(pAlarmTask);
   sched.addTask(pBlinkingTask);
@@ -51,12 +56,11 @@ pHWPlatform->getTempSensor(),pHWPlatform->getLcd());
 #ifdef __TESTING_HW__
   /* Testing */
   Task* pTestHWTask = new TestHWTask(pHWPlatform);
-  pTestHWTask->init(500);
+  pTestHWTask->init(2000);
   sched.addTask(pTestHWTask);
 #endif
 }
 
 void loop() {
-    MsgService.SerialEvent();
     sched.schedule();
 }

@@ -71,9 +71,9 @@ void HWPlatform::test(){
   Logger.log("Temp Sensor readout " + String(pTempSensor->getTemperature()));
   Logger.log("PIR readout:" + String(pPir->isDetected()));
   pLcd->printAt(2,2,"HELLO");
-  delay(100);
+  delay(1000);
   pMotor->setPosition(0);
-  delay(100);
+  delay(1000);
   pMotor->off();
   pRedLed->switchOff();
 }

@@ -21,14 +21,13 @@ LandingTask::LandingTask(Sonar *pSonar, ServoMotor *pMotor, Context *pContext, L
 }
 void LandingTask::log(const String &msg)
 {
-    Logger.log("[land]:");
-    Logger.log(msg);
+    Logger.log("[LA]:"+msg);
 }
 // DroneState{INSIDE,TAKE_OFF,OUTSIDE,LANDING}
 //  {IDLE, OPEN_DOOR, WAIT, TIMEOUT, ENTERED}
 void LandingTask::tick()
 {
-    if (!isActive() && pContext->getDroneState() == Context::DroneState::OUTSIDE)
+    if (!pContext->isToBeStopped() && !isActive() && pContext->getDroneState() == Context::DroneState::OUTSIDE)
     {
         setActive(true);
     }

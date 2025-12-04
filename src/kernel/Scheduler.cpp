@@ -19,6 +19,7 @@ void Scheduler::init(int basePeriod){
 bool Scheduler::addTask(Task* task){
   if (nTasks < MAX_TASKS-1){
     taskList[nTasks] = task;
+    taskList[nTasks]->setActive(true);
     nTasks++;
     return true;
   } else {

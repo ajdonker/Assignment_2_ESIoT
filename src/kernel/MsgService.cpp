@@ -30,6 +30,7 @@ Msg* MsgServiceClass::receiveMsg(){
 
 void MsgServiceClass::init(){
   Serial.begin(115200);
+  Serial.println("init");
   content.reserve(256);
   content = "";
   currentMsg = NULL;
@@ -48,7 +49,6 @@ void MsgServiceClass::SerialEvent() {
     if (ch == '\n'){
       MsgService.currentMsg = new Msg(content);
       MsgService.msgAvailable = true;      
-      //Serial.println(MsgService.currentMsg->getContent());
     } else {
       content += ch;      
     }
