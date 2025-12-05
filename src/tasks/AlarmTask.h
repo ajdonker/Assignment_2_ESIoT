@@ -33,10 +33,10 @@ private:
   bool justEntered;
   long TempLesserT1Timestamp;
 
+  Button* pResetButton;
   Led* pRedLed;
   Context* pContext;
   MsgServiceClass* pMsgService;
-  Button* pResetButton;
   TempSensor* pTempSensor;
   Lcd* pLcd;
 };

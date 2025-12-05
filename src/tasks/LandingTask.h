@@ -34,12 +34,13 @@ private:
   long stateTimestamp;
   bool justEntered;
 
-  Button* pButton;
+  Sonar* pSonar;
   ServoMotor* pMotor;
   Context* pContext;
-  MsgServiceClass* pMsgService;
   Lcd* pLcd;
-  Sonar* pSonar;
+  MsgServiceClass* pMsgService;
+  
+  
   LandingPattern landingPattern;
   int currentPos;
   long distanceGreaterD2Timestamp;

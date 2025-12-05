@@ -23,7 +23,7 @@ HWPlatform::HWPlatform(){
   pGreen2Led = new Led(GREEN2_PIN);
   pMotor = new ServoMotorImpl(MOTOR_PIN);
   pPir = new Pir(PIR_PIN);
-  pSonar = new FakeSonar(SONAR_ECHO_PIN,SONAR_TRIG_PIN,SONAR_TIMEOUT_TIME);
+  pSonar = new Sonar(SONAR_ECHO_PIN,SONAR_TRIG_PIN,SONAR_TIMEOUT_TIME);
   pTempSensor = new FakeTempSensor(TEMP_PIN);
   pLcd = new Lcd(0x27,20,4);
 }

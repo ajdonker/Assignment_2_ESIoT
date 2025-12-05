@@ -1,6 +1,6 @@
 #ifndef __FAKE_TEMP_SENSOR__
 #define __FAKE_TEMP_SENSOR__
-#define FAKE_TEMP 40.0
+#define FAKE_TEMP 10.0
 class FakeTempSensor: public TempSensor {
 
 public:

@@ -30,7 +30,7 @@ public:
   
   Msg* currentMsg;
   bool msgAvailable;
-
+  String content;
   void init();  
 
   bool isMsgAvailable();

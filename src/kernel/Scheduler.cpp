@@ -14,6 +14,7 @@ void Scheduler::init(int basePeriod){
   Timer1.initialize(period);
   Timer1.attachInterrupt(timerHandler);
   nTasks = 0;
+  //Serial.println("sched");
 }
 
 bool Scheduler::addTask(Task* task){

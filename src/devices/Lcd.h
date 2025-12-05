@@ -10,6 +10,7 @@ public:
         : lcd(address, width, height) {
             lcd.init();
             lcd.backlight();
+            lcd.clear();
         }
     void clear() {
         lcd.clear();

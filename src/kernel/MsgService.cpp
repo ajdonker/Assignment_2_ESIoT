@@ -4,8 +4,6 @@
 #include "Arduino.h"
 #endif
 #include "MsgService.h"
-String content;
-
 MsgServiceClass MsgService;
 
 bool MsgServiceClass::isMsgAvailable(){
@@ -29,12 +27,13 @@ Msg* MsgServiceClass::receiveMsg(){
 }
 
 void MsgServiceClass::init(){
-  Serial.begin(115200);
-  Serial.println("init");
-  content.reserve(256);
+  // Serial.begin(115200);
+  // Serial.println("init");
+  content.reserve(64);
   content = "";
   currentMsg = NULL;
   msgAvailable = false;  
+  //Serial.println("MsgService inited");
 }
 
 void MsgServiceClass::sendMsg(const String& msg){
