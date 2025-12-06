@@ -3,7 +3,6 @@
 
 #include "kernel/Task.h"
 #include "kernel/MsgService.h"
-#include "kernel/Logger.h"
 #include "devices/ServoMotor.h"
 #include "devices/Button.h"
 #include "model/Context.h"
@@ -25,7 +24,6 @@ private:
   enum class State{IDLE, OPEN_DOOR, WAIT, TIMEOUT, EXITED};
   void setState(State state);
   long elapsedTimeInState();
-  void log(const String& msg);
   
   bool checkAndSetJustEntered();
   

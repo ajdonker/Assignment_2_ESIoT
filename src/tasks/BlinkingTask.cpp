@@ -18,7 +18,7 @@ void BlinkingTask::tick(){
     case State::IDLE: {
         if (this->checkAndSetJustEntered()){
             pGreen2Led->switchOff();
-            Logger.log(F("[BT] IDLE"));
+            Serial.println(F("[BT] IDLE"));
 
         }
         if (pContext->isStarted()){
@@ -29,7 +29,7 @@ void BlinkingTask::tick(){
     case State::OFF: {
         if (this->checkAndSetJustEntered()){
             pGreen2Led->switchOff();
-            Logger.log(F("[BT] OFF"));
+            Serial.println(F("[BT] OFF"));
         }
         if (pContext->isStopped()){
             setState(State::IDLE);
@@ -41,7 +41,7 @@ void BlinkingTask::tick(){
     case State::ON: {
         if (this->checkAndSetJustEntered()){
             pGreen2Led->switchOn();
-            Logger.log(F("[BT] ON"));
+            Serial.println(F("[BT] ON"));
         }
         if (pContext->isStopped()){
             setState(State::IDLE);

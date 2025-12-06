@@ -19,7 +19,6 @@ private:
   enum class State{ OFF, ON };
   void setState(State state);
   long elapsedTimeInState();
-  void log(const String& msg);
   
   bool checkAndSetJustEntered();
   

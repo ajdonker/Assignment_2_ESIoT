@@ -1,5 +1,5 @@
 #include "Context.h"
-
+#include <Arduino.h>
 Context::Context(){
   started = false;
   stopped = false;
@@ -44,14 +44,14 @@ void Context::setDroneState(Context::DroneState s)
         onDroneStateChanged(s);
   }
 }
-const char* Context::droneStateName(Context::DroneState s){
+const __FlashStringHelper* Context::droneStateName(Context::DroneState s){
   switch(s) {
-        case DroneState::INSIDE:     return "DRONE:INSIDE";
-        case DroneState::TAKE_OFF:   return "DRONE:TAKE_OFF";
-        case DroneState::OUTSIDE:    return "DRONE:OUTSIDE";
-        case DroneState::LANDING:    return "DRONE:LANDING";
+        case DroneState::INSIDE:     return F("DRONE:INSIDE");
+        case DroneState::TAKE_OFF:   return F("DRONE:TAKE_OFF");
+        case DroneState::OUTSIDE:    return F("DRONE:OUTSIDE");
+        case DroneState::LANDING:    return F("DRONE:LANDING");
     }
-    return "UNKNOWN";
+    return F("UNKNOWN");
 }
 Context::DroneState Context::getDroneState()
 {
@@ -68,12 +68,12 @@ void Context::setHangarState(Context::HangarState s)
     onHangarStateChanged(s);
   }
 }
-const char* Context::hangarStateName(Context::HangarState s){
+const __FlashStringHelper* Context::hangarStateName(Context::HangarState s){
   switch(s) {
-        case HangarState::IDLE:     return "HANGAR:IDLE";
-        case HangarState::PRE_ALARM:   return "HANGAR:PRE_ALARM";
-        case HangarState::ALARM:    return "HANGAR:ALARM";
+        case HangarState::IDLE:     return F("HANGAR:IDLE");
+        case HangarState::PRE_ALARM:   return F("HANGAR:PRE_ALARM");
+        case HangarState::ALARM:    return F("HANGAR:ALARM");
     }
-    return "UNKNOWN";
+    return F("UNKNOWN");
 }
 

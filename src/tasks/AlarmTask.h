@@ -23,7 +23,6 @@ private:
   enum class State{ IDLE, PRE_ALARM, ALARM };
   void setState(State state);
   long elapsedTimeInState();
-  void log(const String& msg);
   
   bool checkAndSetJustEntered();
   

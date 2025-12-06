@@ -25,7 +25,6 @@ private:
   enum class State{IDLE, OPEN_DOOR, WAIT, TIMEOUT, ENTERED};
   void setState(State state);
   long elapsedTimeInState();
-  void log(const String& msg);
   
   bool checkAndSetJustEntered();
   

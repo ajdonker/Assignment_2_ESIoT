@@ -11,7 +11,6 @@
 #include "devices/LightSensorImpl.h"
 #include "devices/ServoMotorImpl.h"
 #include "kernel/Logger.h"
-#include "devices/TempSensorTMP36.h"
 #include "devices/FakeSonar.h"
 #include "devices/FakeTempSensor.h"
 void wakeUp(){}
@@ -66,10 +65,14 @@ void HWPlatform::test(){
   pRedLed->switchOn();
   pMotor->on();
   pMotor->setPosition(90);
-  Logger.log("Button: " + String(btPressed ? "pressed" : " not pressed"));
-  Logger.log("Sonar readout: " + String(pSonar->getDistance()));
-  Logger.log("Temp Sensor readout " + String(pTempSensor->getTemperature()));
-  Logger.log("PIR readout:" + String(pPir->isDetected()));
+  Serial.println(F("Button:"));
+  Serial.println((btPressed ? F("pressed") : F("not pressed")));
+  Serial.println(F("Sonar readout:"));
+  Serial.println(pSonar->getDistance());
+  Serial.println(F("Temp Sensor readout "));
+  Serial.println(pTempSensor->getTemperature());
+  Serial.println(F("PIR readout:"));
+  Serial.println(pPir->isDetected());
   pLcd->printAt(2,2,"HELLO");
   delay(1000);
   pMotor->setPosition(0);

@@ -1,6 +1,6 @@
 #ifndef __CONTEXT__
 #define __CONTEXT__
-
+#include <Arduino.h>
 class Context {
 
 public:
@@ -27,11 +27,11 @@ public:
   void setToBeStopped(bool val);
 
   void setDroneState(DroneState s);
-  static const char* droneStateName(DroneState s);
+  static const __FlashStringHelper* droneStateName(DroneState s);
   DroneState getDroneState();
 
   void setHangarState(HangarState s);
-  static const char* hangarStateName(HangarState s);
+  static const __FlashStringHelper* hangarStateName(HangarState s);
   HangarState getHangarState();
 
 private:

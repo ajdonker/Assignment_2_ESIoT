@@ -27,7 +27,6 @@ public:
 class MsgServiceClass {
     
 public: 
-  
   Msg* currentMsg;
   bool msgAvailable;
   String content;

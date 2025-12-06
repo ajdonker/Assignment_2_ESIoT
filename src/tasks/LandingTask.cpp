@@ -6,7 +6,7 @@
 #endif
 #include "config.h"
 #include "../constants.h"
-// #include "kernel/Logger.h"
+// #include "kernel/Serial.printlnger.h"
 // #include "model/Context.h"
 #define OPEN_DOOR_TIME 2000
 #define CLOSE_DOOR_TIME 1000
@@ -18,10 +18,6 @@ LandingTask::LandingTask(Sonar *pSonar, ServoMotor *pMotor, Context *pContext, L
 pContext(pContext), pLcd(pLcd)
 {
     setState(State::IDLE);
-}
-void LandingTask::log(const String &msg)
-{
-    Logger.log("[LA]:"+msg);
 }
 // DroneState{INSIDE,TAKE_OFF,OUTSIDE,LANDING}
 //  {IDLE, OPEN_DOOR, WAIT, TIMEOUT, ENTERED}
@@ -39,7 +35,7 @@ void LandingTask::tick()
         {
             if(this->checkAndSetJustEntered())
             {
-                log(F("IDLE"));
+                Serial.println(F("IDLE"));
             }
             if(MsgService.isMsgAvailable())
             {
@@ -57,7 +53,7 @@ void LandingTask::tick()
         {
             if (this->checkAndSetJustEntered())
             {
-                log(F("OPEN_DOOR"));
+                Serial.println(F("OPEN_DOOR"));
                 pLcd->clear();
                 pLcd->printAt(2, 2, F("LANDING"));
             }
@@ -78,7 +74,7 @@ void LandingTask::tick()
         {
             if (this->checkAndSetJustEntered())
             {
-                log(F("WAIT"));
+                Serial.println(F("WAIT"));
                 distanceGreaterD2Timestamp = 0;
                 landingMsgTimestamp = 0;
             }
@@ -107,7 +103,7 @@ void LandingTask::tick()
         {
             if (this->checkAndSetJustEntered())
             {
-                log(F("TIMEOUT"));
+                Serial.println(F("TIMEOUT"));
             }
             /* update motor pos*/
             // close door needed
@@ -126,7 +122,7 @@ void LandingTask::tick()
         {
             if (this->checkAndSetJustEntered())
             {
-                log(F("ENTERED"));
+                Serial.println(F("ENTERED"));
                 pLcd->clear();
                 pLcd->printAt(2, 2, F("DRONE_INSIDE"));
                 pContext->setStopped();

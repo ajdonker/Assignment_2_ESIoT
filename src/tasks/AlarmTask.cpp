@@ -24,7 +24,7 @@ void AlarmTask::tick(){
                     TempLesserT1Timestamp = 0;
                     //MsgService->sendMsg("HANGAR:IDLE");
                     pContext->setHangarState(Context::HangarState::IDLE);
-                    Logger.log("[AA]:IDLE");
+                    Serial.println("[AA]:IDLE");
                 }
                 long dt = elapsedTimeInState();
                 float TempReadout = pTempSensor->getTemperature();
@@ -42,7 +42,7 @@ void AlarmTask::tick(){
                 if(this->checkAndSetJustEntered()){
                     pContext->setToBeStopped(true);
                     pContext->setHangarState(Context::HangarState::PRE_ALARM);
-                    Logger.log("[AA]:PRE_ALARM");
+                    Serial.println("[AA]:PRE_ALARM");
                 }
                 long dt = elapsedTimeInState();
                 float TempReadout = pTempSensor->getTemperature();
@@ -59,7 +59,7 @@ void AlarmTask::tick(){
             case(State::ALARM):{
                 if(this->checkAndSetJustEntered()){
                     pRedLed->switchOn();
-                    Logger.log("[AA]:ALARM");
+                    Serial.println("[AA]:ALARM");
                     pLcd->clear();
                     pLcd->printAt(2,2,"ALARM");
                     pContext->setHangarState(Context::HangarState::ALARM);

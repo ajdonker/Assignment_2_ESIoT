@@ -6,7 +6,7 @@
 #endif
 #include "config.h"
 #include "../constants.h"
-// #include "kernel/Logger.h"
+// #include "kernel/Serial.printlnger.h"
 // #include "model/Context.h"
 #define OPEN_DOOR_TIME 2000
 #define CLOSE_DOOR_TIME 1000
@@ -18,10 +18,6 @@ TakeOffTask::TakeOffTask(Sonar *pSonar, ServoMotor *pMotor, Context *pContext, L
  : pSonar(pSonar), pMotor(pMotor), pContext(pContext), pLcd(pLcd)
 {
     setState(State::IDLE);
-}
-void TakeOffTask::log(const String &msg)
-{
-    Logger.log("[TO]:"+msg);
 }
 // DroneState{INSIDE,TAKE_OFF,OUTSIDE,LANDING}
 //  {IDLE, OPEN_DOOR, WAIT, TIMEOUT, EXITED}
@@ -37,7 +33,7 @@ void TakeOffTask::tick()
     {
         if(this->checkAndSetJustEntered())
         {
-            log(F("IDLE"));
+            Serial.println(F("IDLE"));
         }
         if(MsgService.isMsgAvailable())
         {
@@ -55,7 +51,7 @@ void TakeOffTask::tick()
     {
         if (this->checkAndSetJustEntered())
         {
-            log(F("OPEN_DOOR"));
+            Serial.println(F("OPEN_DOOR"));
             //pContext->setDroneState(Context::DroneState::TAKE_OFF);
             pLcd->clear();
             pLcd->printAt(2, 2, F("TAKE_OFF"));
@@ -77,7 +73,7 @@ void TakeOffTask::tick()
     {
         if (this->checkAndSetJustEntered())
         {
-            log(F("WAIT"));
+            Serial.println(F("WAIT"));
             distanceLessD1Timestamp = 0;
         }
         long dt = elapsedTimeInState();
@@ -100,7 +96,7 @@ void TakeOffTask::tick()
     {
         if (this->checkAndSetJustEntered())
         {
-            log(F("TIMEOUT"));
+            Serial.println(F("TIMEOUT"));
         }
         /* update motor pos*/
         // close door needed
@@ -119,7 +115,7 @@ void TakeOffTask::tick()
     {
         if (this->checkAndSetJustEntered())
         {
-            log(F("EXITED"));
+            Serial.println(F("EXITED"));
             pLcd->clear();
             pLcd->printAt(2, 2, F("DRONE_OUT"));
             pContext->setStopped();

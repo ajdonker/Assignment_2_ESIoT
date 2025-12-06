@@ -6,7 +6,6 @@
 
 #include "config.h"
 #include "kernel/Scheduler.h"
-#include "kernel/Logger.h"
 #include "kernel/MsgService.h"
 #include "model/HWPlatform.h"
 #include "tasks/TestHWTask.h"
@@ -47,15 +46,14 @@ void setup() {
   Serial.begin(115200);
   delay(100);
   MsgService.init();
-  Serial.println("init");
+  Serial.println(F("init"));
   sched.init(50);
   pContext = new Context();
   pContext->reset();
-  Serial.println("context inited");
-  Logger.log(":::::: Drone System ::::::");
+  Serial.println(F("context inited"));
   
   pContext->onDroneStateChanged = onDroneStateChangedHandler;
-  Serial.println("handler");
+  Serial.println(F("handler"));
   pHWPlatform = new HWPlatform();
   pHWPlatform->init();
   // Serial.println(freeMemory());
@@ -70,7 +68,7 @@ pHWPlatform->getTempSensor(),pHWPlatform->getLcd());
   pAlarmTask->init();
   Task* pBlinkingTask = new BlinkingTask(pHWPlatform->getGreen2Led(), pContext);
   pBlinkingTask->init(500);
-  Logger.log("tasks are initialized");
+  Serial.println(F("Tasks inited"));
   sched.addTask(pOnOffTask);
   sched.addTask(pTakeOffTask);
   sched.addTask(pAlarmTask);
