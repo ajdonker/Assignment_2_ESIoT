@@ -18,8 +18,7 @@
 class TakeOffTask: public Task {
 
 public:
-  TakeOffTask(Sonar* pSonar, ServoMotor* pMotor, Context* pContext, Lcd* pLcd,  
-    MsgServiceClass *pMsgService); 
+  TakeOffTask(Sonar* pSonar, ServoMotor* pMotor, Context* pContext, Lcd* pLcd); 
   void tick();
 
 private:  
@@ -38,10 +37,10 @@ private:
   ServoMotor* pMotor;
   Context* pContext;
   Lcd* pLcd;
-  MsgServiceClass* pMsgService;
+  //MsgServiceClass* pMsgService;
 
   TakeOffPattern takeOffPattern;
-  int currentPos;
+  uint8_t currentPos;
   long distanceLessD1Timestamp;
   bool toBeStopped;
 };

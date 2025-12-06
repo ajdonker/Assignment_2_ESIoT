@@ -14,8 +14,8 @@
 #define RESET_TIME 500
 #define TIMEOUT_TIME 25000
 
-TakeOffTask::TakeOffTask(Sonar *pSonar, ServoMotor *pMotor, Context *pContext, Lcd *pLcd,
-                         MsgServiceClass *pMsgService) : pSonar(pSonar), pMotor(pMotor), pContext(pContext), pLcd(pLcd), pMsgService(pMsgService)
+TakeOffTask::TakeOffTask(Sonar *pSonar, ServoMotor *pMotor, Context *pContext, Lcd *pLcd)
+ : pSonar(pSonar), pMotor(pMotor), pContext(pContext), pLcd(pLcd)
 {
     setState(State::IDLE);
 }
@@ -39,9 +39,9 @@ void TakeOffTask::tick()
         {
             log(F("IDLE"));
         }
-        if(pMsgService->isMsgAvailable())
+        if(MsgService.isMsgAvailable())
         {
-            if(pMsgService->receiveMsg(takeOffPattern))
+            if(MsgService.receiveMsg(takeOffPattern))
             {
                 pMotor->on();
                 pContext->setStarted();

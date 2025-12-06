@@ -8,10 +8,8 @@
 #include "../constants.h"
 #include "kernel/Logger.h"
 
-AlarmTask::AlarmTask(Button* pResetButton, Led* pRedLed, Context* pContext, MsgServiceClass* pMsgService,
-TempSensor* pTempSensor, Lcd* pLcd):
-pResetButton(pResetButton),pRedLed(pRedLed), pContext(pContext), pMsgService(pMsgService), pTempSensor(pTempSensor),
-pLcd(pLcd)
+AlarmTask::AlarmTask(Button* pResetButton, Led* pRedLed, Context* pContext,TempSensor* pTempSensor, Lcd* pLcd):
+pResetButton(pResetButton),pRedLed(pRedLed), pContext(pContext),pTempSensor(pTempSensor),pLcd(pLcd)
 {
     setActive(true);
     setState(State::IDLE);
@@ -24,7 +22,7 @@ void AlarmTask::tick(){
             case(State::IDLE):{
                 if(this->checkAndSetJustEntered()){
                     TempLesserT1Timestamp = 0;
-                    //pMsgService->sendMsg("HANGAR:IDLE");
+                    //MsgService->sendMsg("HANGAR:IDLE");
                     pContext->setHangarState(Context::HangarState::IDLE);
                     Logger.log("[AA]:IDLE");
                 }
@@ -66,7 +64,7 @@ void AlarmTask::tick(){
                     pLcd->printAt(2,2,"ALARM");
                     pContext->setHangarState(Context::HangarState::ALARM);
                     if(pContext->getDroneState() == Context::DroneState::OUTSIDE){
-                        pMsgService->sendMsg("ALERT");
+                        MsgService.sendMsg("ALERT");
                     }
                 }
                 

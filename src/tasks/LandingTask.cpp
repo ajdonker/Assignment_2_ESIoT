@@ -14,8 +14,8 @@
 #define RESET_TIME 500
 #define TIMEOUT_TIME 25000
 #define LANDING_MSG_PERIOD 2000
-LandingTask::LandingTask(Sonar *pSonar, ServoMotor *pMotor, Context *pContext, Lcd *pLcd,
-                         MsgServiceClass *pMsgService) : pSonar(pSonar), pMotor(pMotor), pContext(pContext), pLcd(pLcd), pMsgService(pMsgService)
+LandingTask::LandingTask(Sonar *pSonar, ServoMotor *pMotor, Context *pContext, Lcd *pLcd) : pSonar(pSonar), pMotor(pMotor), 
+pContext(pContext), pLcd(pLcd)
 {
     setState(State::IDLE);
 }
@@ -41,9 +41,9 @@ void LandingTask::tick()
             {
                 log(F("IDLE"));
             }
-            if(pMsgService->isMsgAvailable())
+            if(MsgService.isMsgAvailable())
             {
-                if(pMsgService->receiveMsg(landingPattern))
+                if(MsgService.receiveMsg(landingPattern))
                 {
                     pMotor->on();
                     pContext->setStarted();
@@ -87,7 +87,7 @@ void LandingTask::tick()
             if(dt - landingMsgTimestamp > LANDING_MSG_PERIOD)
             {
                 landingMsgTimestamp = dt;
-                pMsgService->sendMsg("DIST:"+ String(readOut));
+                MsgService.sendMsg("DIST:"+ String(readOut));
             }
             if (readOut >= D2)
             {

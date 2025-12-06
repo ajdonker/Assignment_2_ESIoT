@@ -2,15 +2,15 @@
 #define __BUTTONIMPL__
 
 #include "Button.h"
-
+#include <Arduino.h>
 class ButtonImpl: public Button {
  
 public: 
-  ButtonImpl(int pin);
+  ButtonImpl(uint8_t pin);
   bool isPressed();
 
 private:
-  int pin;
+  uint8_t pin;
 
 };
 

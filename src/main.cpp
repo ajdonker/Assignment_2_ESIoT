@@ -12,7 +12,6 @@
 #include "tasks/TestHWTask.h"
 #include "tasks/AlarmTask.h"
 #include "tasks/TakeOffTask.h"
-#include "tasks/SweepingTask.h"
 #include "tasks/BlinkingTask.h"
 #include "tasks/OnOffTask.h"
 
@@ -64,8 +63,7 @@ void setup() {
 #ifndef __TESTING_HW__
   Task* pOnOffTask = new OnOffTask(pHWPlatform->getGreen1Led(),pContext);
   pOnOffTask->init();
-  Task* pTakeOffTask = new TakeOffTask(pHWPlatform->getSonar(),pHWPlatform->getMotor(),pContext,pHWPlatform->getLcd(),
-  &MsgService);
+  Task* pTakeOffTask = new TakeOffTask(pHWPlatform->getSonar(),pHWPlatform->getMotor(),pContext,pHWPlatform->getLcd());
   pTakeOffTask->init();
   Task* pAlarmTask = new AlarmTask(pHWPlatform->getButton(),pHWPlatform->getRedLed(),pContext,&MsgService,
 pHWPlatform->getTempSensor(),pHWPlatform->getLcd());
