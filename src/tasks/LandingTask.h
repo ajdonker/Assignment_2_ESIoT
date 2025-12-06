@@ -3,7 +3,6 @@
 
 #include "kernel/Task.h"
 #include "kernel/MsgService.h"
-#include "kernel/Logger.h"
 #include "devices/ServoMotor.h"
 #include "devices/Button.h"
 #include "model/Context.h"

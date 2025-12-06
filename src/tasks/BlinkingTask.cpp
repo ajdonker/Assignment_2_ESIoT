@@ -5,7 +5,6 @@
 #include "Arduino.h"
 #endif
 #include "config.h"
-#include "kernel/Logger.h"
 
 BlinkingTask::BlinkingTask(Led* pGreen2Led, Context* pContext): 
     pContext(pContext), pGreen2Led(pGreen2Led){

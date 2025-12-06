@@ -5,7 +5,6 @@
 #include "Arduino.h"
 #endif
 #include "config.h"
-#include "kernel/Logger.h"
 
 OnOffTask::OnOffTask(Led* pGreen1Led, Context* pContext): 
     pContext(pContext), pGreen1Led(pGreen1Led){
@@ -17,7 +16,7 @@ void OnOffTask::tick(){
     case State::OFF: {
         if (this->checkAndSetJustEntered()){
             pGreen1Led->switchOff();
-            Logger.log(F("[OO] OFF"));
+            Serial.println(F("[OO] OFF"));
         }
         if(pContext->getHangarState() != Context::HangarState::ALARM){
             if (pContext->getDroneState() == Context::DroneState::INSIDE){
@@ -29,7 +28,7 @@ void OnOffTask::tick(){
     case State::ON: {
         if (this->checkAndSetJustEntered()){
             pGreen1Led->switchOn();
-            Logger.log(F("[OO] ON"));
+            Serial.println(F("[OO] ON"));
         }
         if(pContext->getHangarState() == Context::HangarState::ALARM){
             setState(State::OFF);

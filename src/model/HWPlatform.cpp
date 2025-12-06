@@ -10,7 +10,6 @@
 #include "devices/Led.h"
 #include "devices/LightSensorImpl.h"
 #include "devices/ServoMotorImpl.h"
-#include "kernel/Logger.h"
 #include "devices/FakeSonar.h"
 #include "devices/FakeTempSensor.h"
 void wakeUp(){}
