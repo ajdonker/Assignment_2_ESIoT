@@ -15,22 +15,6 @@
 #include "tasks/OnOffTask.h"
 #include "LiquidCrystal_I2C.h"
 #include "devices/Lcd.h"
-#define __TESTING_HW__
-// #if defined(__AVR__)
-// extern unsigned int __bss_end;
-// extern void *__brkval;
-// int freeMemory(){
-//   int v;
-//   int free_mem;
-//   if((int)__brkval == 0){
-//     free_mem = (int)&v - (int)&__bss_end;
-//   }
-//   else{
-//     free_mem = (int)&v - (int)__brkval;
-//   }
-//   return free_mem;
-// }
-// #endif
 Scheduler sched;
 LiquidCrystal_I2C lcd = LiquidCrystal_I2C(0x27,20,4); 
 HWPlatform pHWPlatform;
@@ -62,14 +46,13 @@ void setup() {
   // Serial.println(freeMemory());
 
 #ifndef __TESTING_HW__
-  Task* pOnOffTask = new OnOffTask(pHWPlatform.getGreen1Led(),pContext);
+  Task* pOnOffTask = new OnOffTask(pHWPlatform.getGreen1Led());
   pOnOffTask->init();
-  Task* pTakeOffTask = new TakeOffTask(pHWPlatform.getSonar(),pHWPlatform.getMotor(),pContext,pHWPlatform.getLcd());
+  Task* pTakeOffTask = new TakeOffTask(pHWPlatform.getSonar(),pHWPlatform.getMotor(),pHWPlatform.getLcd());
   pTakeOffTask->init();
-  Task* pAlarmTask = new AlarmTask(pHWPlatform.getButton(),pHWPlatform.getRedLed(),pContext,&MsgService,
-pHWPlatform.getTempSensor(),pHWPlatform.getLcd());
+  Task* pAlarmTask = new AlarmTask(pHWPlatform.getButton(),pHWPlatform.getRedLed(),pHWPlatform.getTempSensor(),pHWPlatform.getLcd());
   pAlarmTask->init();
-  Task* pBlinkingTask = new BlinkingTask(pHWPlatform.getGreen2Led(), pContext);
+  Task* pBlinkingTask = new BlinkingTask(pHWPlatform.getGreen2Led());
   pBlinkingTask->init(500);
   Serial.println(F("Tasks inited"));
   sched.addTask(pOnOffTask);

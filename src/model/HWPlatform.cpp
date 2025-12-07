@@ -43,7 +43,7 @@ Lcd* HWPlatform::getLcd()           { return pLcd; }
 
 void HWPlatform::test() {
   bool btPressed = pButton->isPressed();
-  
+  pPir->sync();  
   pRedLed->switchOn();
   pMotor->on();
   pMotor->setPosition(90);

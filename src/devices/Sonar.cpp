@@ -17,9 +17,9 @@ float Sonar::getSoundSpeed(){
 
 float Sonar::getDistance(){
     digitalWrite(trigPin,LOW);
-    delayMicroseconds(3);
+    delayMicroseconds(2);
     digitalWrite(trigPin,HIGH);
-    delayMicroseconds(5);
+    delayMicroseconds(10);
     digitalWrite(trigPin,LOW);
     
     float tUS = pulseIn(echoPin, HIGH, timeOut);
