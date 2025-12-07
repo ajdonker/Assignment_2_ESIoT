@@ -5,7 +5,8 @@
 #include "Arduino.h"
 #endif
 #include "config.h"
-
+#include "LiquidCrystal_I2C.h"
+#include "devices/Lcd.h"
 
 TestHWTask::TestHWTask(HWPlatform* pHW): pHW(pHW){
     setActive(true);

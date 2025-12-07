@@ -6,8 +6,8 @@
 #endif
 #include "config.h"
 
-OnOffTask::OnOffTask(Led* pGreen1Led, Context* pContext): 
-    pContext(pContext), pGreen1Led(pGreen1Led){
+OnOffTask::OnOffTask(Led* pGreen1Led): 
+    pGreen1Led(pGreen1Led){
     setState(State::OFF);
 }
   
@@ -18,8 +18,8 @@ void OnOffTask::tick(){
             pGreen1Led->switchOff();
             Serial.println(F("[OO] OFF"));
         }
-        if(pContext->getHangarState() != Context::HangarState::ALARM){
-            if (pContext->getDroneState() == Context::DroneState::INSIDE){
+        if(pContext.getHangarState() != Context::HangarState::ALARM){
+            if (pContext.getDroneState() == Context::DroneState::INSIDE){
                 setState(State::ON);
             } 
         }
@@ -30,10 +30,10 @@ void OnOffTask::tick(){
             pGreen1Led->switchOn();
             Serial.println(F("[OO] ON"));
         }
-        if(pContext->getHangarState() == Context::HangarState::ALARM){
+        if(pContext.getHangarState() == Context::HangarState::ALARM){
             setState(State::OFF);
         }
-        else if(pContext->getDroneState() != Context::DroneState::INSIDE){
+        else if(pContext.getDroneState() != Context::DroneState::INSIDE){
             setState(State::OFF);
         } 
         break;

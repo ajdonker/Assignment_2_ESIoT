@@ -7,8 +7,8 @@
 #include "config.h"
 #include "../constants.h"
 
-AlarmTask::AlarmTask(Button* pResetButton, Led* pRedLed, Context* pContext,TempSensor* pTempSensor, Lcd* pLcd):
-pResetButton(pResetButton),pRedLed(pRedLed), pContext(pContext),pTempSensor(pTempSensor),pLcd(pLcd)
+AlarmTask::AlarmTask(Button* pResetButton, Led* pRedLed,TempSensor* pTempSensor, Lcd* pLcd):
+pResetButton(pResetButton),pRedLed(pRedLed),pTempSensor(pTempSensor),pLcd(pLcd)
 {
     setActive(true);
     setState(State::IDLE);
@@ -16,13 +16,13 @@ pResetButton(pResetButton),pRedLed(pRedLed), pContext(pContext),pTempSensor(pTem
 
 //enum class State{ IDLE, PRE_ALARM, ALARM };
 void AlarmTask::tick(){
-    if(pContext->getDroneState() != Context::DroneState::OUTSIDE){
+    if(pContext.getDroneState() != Context::DroneState::OUTSIDE){
         switch(state){
             case(State::IDLE):{
                 if(this->checkAndSetJustEntered()){
                     TempLesserT1Timestamp = 0;
                     //MsgService->sendMsg("HANGAR:IDLE");
-                    pContext->setHangarState(Context::HangarState::IDLE);
+                    pContext.setHangarState(Context::HangarState::IDLE);
                     Serial.println("[AA]:IDLE");
                 }
                 long dt = elapsedTimeInState();
@@ -39,8 +39,8 @@ void AlarmTask::tick(){
             }
             case(State::PRE_ALARM):{
                 if(this->checkAndSetJustEntered()){
-                    pContext->setToBeStopped(true);
-                    pContext->setHangarState(Context::HangarState::PRE_ALARM);
+                    pContext.setToBeStopped(true);
+                    pContext.setHangarState(Context::HangarState::PRE_ALARM);
                     Serial.println("[AA]:PRE_ALARM");
                 }
                 long dt = elapsedTimeInState();
@@ -61,8 +61,8 @@ void AlarmTask::tick(){
                     Serial.println("[AA]:ALARM");
                     pLcd->clear();
                     pLcd->printAt(2,2,"ALARM");
-                    pContext->setHangarState(Context::HangarState::ALARM);
-                    if(pContext->getDroneState() == Context::DroneState::OUTSIDE){
+                    pContext.setHangarState(Context::HangarState::ALARM);
+                    if(pContext.getDroneState() == Context::DroneState::OUTSIDE){
                         MsgService.sendMsg("ALERT");
                     }
                 }

@@ -3,26 +3,31 @@
 #include <LiquidCrystal_I2C.h> 
 class Lcd {
 private:
-    LiquidCrystal_I2C lcd;
+    LiquidCrystal_I2C* lcd;
 
 public:
     Lcd(uint8_t address, uint8_t width, uint8_t height)
         : lcd(address, width, height) {
-            lcd.init();
-            lcd.backlight();
-            lcd.clear();
         }
+    Lcd(LiquidCrystal_I2C* realLcd) {
+        lcd = realLcd;
+    }
+    void begin(){
+        lcd->backlight();
+        lcd->clear();
+        lcd->init();
+    }
     void clear() {
-        lcd.clear();
+        lcd->clear();
     }
 
     void printAt(int row, int col, const String& text) {
-        lcd.setCursor(col, row);
-        lcd.print(text);
+        lcd->setCursor(col, row);
+        lcd->print(text);
     }
 
     void print(const String& text) {
-        lcd.print(text);
+        lcd->print(text);
     }
 };
 #endif

@@ -14,8 +14,8 @@
 #define RESET_TIME 500
 #define TIMEOUT_TIME 25000
 
-TakeOffTask::TakeOffTask(Sonar *pSonar, ServoMotor *pMotor, Context *pContext, Lcd *pLcd)
- : pSonar(pSonar), pMotor(pMotor), pContext(pContext), pLcd(pLcd)
+TakeOffTask::TakeOffTask(Sonar *pSonar, ServoMotor *pMotor,Lcd *pLcd)
+ : pSonar(pSonar), pMotor(pMotor),pLcd(pLcd)
 {
     setState(State::IDLE);
 }
@@ -23,7 +23,7 @@ TakeOffTask::TakeOffTask(Sonar *pSonar, ServoMotor *pMotor, Context *pContext, L
 //  {IDLE, OPEN_DOOR, WAIT, TIMEOUT, EXITED}
 void TakeOffTask::tick()
 {
-    if (!pContext->isToBeStopped() && !isActive() && pContext->getDroneState() == Context::DroneState::INSIDE)
+    if (!pContext.isToBeStopped() && !isActive() && pContext.getDroneState() == Context::DroneState::INSIDE)
     {
         setActive(true);
     }
@@ -40,8 +40,8 @@ void TakeOffTask::tick()
             if(MsgService.receiveMsg(takeOffPattern))
             {
                 pMotor->on();
-                pContext->setStarted();
-                pContext->setDroneState(Context::DroneState::TAKE_OFF);
+                pContext.setStarted();
+                pContext.setDroneState(Context::DroneState::TAKE_OFF);
                 setState(State::OPEN_DOOR);
             }
         }
@@ -52,7 +52,7 @@ void TakeOffTask::tick()
         if (this->checkAndSetJustEntered())
         {
             Serial.println(F("OPEN_DOOR"));
-            //pContext->setDroneState(Context::DroneState::TAKE_OFF);
+            //pContext.setDroneState(Context::DroneState::TAKE_OFF);
             pLcd->clear();
             pLcd->printAt(2, 2, F("TAKE_OFF"));
         }
@@ -118,8 +118,8 @@ void TakeOffTask::tick()
             Serial.println(F("EXITED"));
             pLcd->clear();
             pLcd->printAt(2, 2, F("DRONE_OUT"));
-            pContext->setStopped();
-            pContext->setDroneState(Context::DroneState::OUTSIDE);
+            pContext.setStopped();
+            pContext.setDroneState(Context::DroneState::OUTSIDE);
         }
         if (elapsedTimeInState() > RESET_TIME)
         {

@@ -14,8 +14,8 @@
 #define RESET_TIME 500
 #define TIMEOUT_TIME 25000
 #define LANDING_MSG_PERIOD 2000
-LandingTask::LandingTask(Sonar *pSonar, ServoMotor *pMotor, Context *pContext, Lcd *pLcd) : pSonar(pSonar), pMotor(pMotor), 
-pContext(pContext), pLcd(pLcd)
+LandingTask::LandingTask(Sonar *pSonar, ServoMotor *pMotor,Lcd *pLcd) : pSonar(pSonar), pMotor(pMotor), 
+pLcd(pLcd)
 {
     setState(State::IDLE);
 }
@@ -23,7 +23,7 @@ pContext(pContext), pLcd(pLcd)
 //  {IDLE, OPEN_DOOR, WAIT, TIMEOUT, ENTERED}
 void LandingTask::tick()
 {
-    if (!pContext->isToBeStopped() && !isActive() && pContext->getDroneState() == Context::DroneState::OUTSIDE)
+    if (!pContext.isToBeStopped() && !isActive() && pContext.getDroneState() == Context::DroneState::OUTSIDE)
     {
         setActive(true);
     }
@@ -42,8 +42,8 @@ void LandingTask::tick()
                 if(MsgService.receiveMsg(landingPattern))
                 {
                     pMotor->on();
-                    pContext->setStarted();
-                    pContext->setDroneState(Context::DroneState::LANDING);
+                    pContext.setStarted();
+                    pContext.setDroneState(Context::DroneState::LANDING);
                     setState(State::OPEN_DOOR);
                 }
             }
@@ -125,8 +125,8 @@ void LandingTask::tick()
                 Serial.println(F("ENTERED"));
                 pLcd->clear();
                 pLcd->printAt(2, 2, F("DRONE_INSIDE"));
-                pContext->setStopped();
-                pContext->setDroneState(Context::DroneState::OUTSIDE);
+                pContext.setStopped();
+                pContext.setDroneState(Context::DroneState::OUTSIDE);
             }
             if (elapsedTimeInState() > RESET_TIME)
             {

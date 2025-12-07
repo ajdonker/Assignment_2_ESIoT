@@ -6,8 +6,8 @@
 #endif
 #include "config.h"
 
-BlinkingTask::BlinkingTask(Led* pGreen2Led, Context* pContext): 
-    pContext(pContext), pGreen2Led(pGreen2Led){
+BlinkingTask::BlinkingTask(Led* pGreen2Led): 
+    pGreen2Led(pGreen2Led){
     setActive(true);
     setState(State::IDLE);
 }
@@ -20,7 +20,7 @@ void BlinkingTask::tick(){
             Serial.println(F("[BT] IDLE"));
 
         }
-        if (pContext->isStarted()){
+        if (pContext.isStarted()){
             setState(State::OFF);
         }
         break;
@@ -30,7 +30,7 @@ void BlinkingTask::tick(){
             pGreen2Led->switchOff();
             Serial.println(F("[BT] OFF"));
         }
-        if (pContext->isStopped()){
+        if (pContext.isStopped()){
             setState(State::IDLE);
         } else {
              setState(State::ON);
@@ -42,7 +42,7 @@ void BlinkingTask::tick(){
             pGreen2Led->switchOn();
             Serial.println(F("[BT] ON"));
         }
-        if (pContext->isStopped()){
+        if (pContext.isStopped()){
             setState(State::IDLE);
         } else {
             setState(State::OFF);

@@ -12,7 +12,7 @@
 class OnOffTask: public Task {
 
 public:
-  OnOffTask(Led* pGreen1Led, Context* pContext); 
+  OnOffTask(Led* pGreen1Led); 
   void tick();
 
 private:  
@@ -27,7 +27,6 @@ private:
   bool justEntered;
 
   Led* pGreen1Led;
-  Context* pContext;
 };
 
 #endif

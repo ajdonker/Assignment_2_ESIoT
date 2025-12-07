@@ -1,6 +1,7 @@
 #ifndef __FAKE_TEMP_SENSOR__
 #define __FAKE_TEMP_SENSOR__
 #define FAKE_TEMP 10.0
+#include "TempSensor.h"
 class FakeTempSensor: public TempSensor {
 
 public:

@@ -41,5 +41,5 @@ private:
   bool stopped;
   bool toBeStopped;
 };
-
+extern Context pContext;
 #endif

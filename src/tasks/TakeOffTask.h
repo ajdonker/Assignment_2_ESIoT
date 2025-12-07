@@ -17,7 +17,7 @@
 class TakeOffTask: public Task {
 
 public:
-  TakeOffTask(Sonar* pSonar, ServoMotor* pMotor, Context* pContext, Lcd* pLcd); 
+  TakeOffTask(Sonar* pSonar, ServoMotor* pMotor,Lcd* pLcd); 
   void tick();
 
 private:  
@@ -33,7 +33,6 @@ private:
 
   Sonar* pSonar;
   ServoMotor* pMotor;
-  Context* pContext;
   Lcd* pLcd;
   //MsgServiceClass* pMsgService;
 

@@ -17,7 +17,7 @@
 class LandingTask: public Task {
 
 public:
-  LandingTask(Sonar* pSonar, ServoMotor* pMotor, Context* pContext, Lcd* pLcd); 
+  LandingTask(Sonar* pSonar, ServoMotor* pMotor,Lcd* pLcd); 
   void tick();
 
 private:  
@@ -33,7 +33,6 @@ private:
 
   Sonar* pSonar;
   ServoMotor* pMotor;
-  Context* pContext;
   Lcd* pLcd;  
   
   LandingPattern landingPattern;

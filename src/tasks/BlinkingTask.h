@@ -12,7 +12,7 @@
 class BlinkingTask: public Task {
 
 public:
-  BlinkingTask(Led* pGreen2Led, Context* pContext); 
+  BlinkingTask(Led* pGreen2Led); 
   void tick();
 
 private:  
@@ -27,7 +27,6 @@ private:
   bool justEntered;
 
   Led* pGreen2Led;
-  Context* pContext;
 };
 
 #endif

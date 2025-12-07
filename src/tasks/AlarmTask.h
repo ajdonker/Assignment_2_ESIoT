@@ -16,7 +16,7 @@
 
 class AlarmTask : public Task{
 public:
-  AlarmTask(Button* pResetButton, Led* pRedLed, Context* pContext,TempSensor* pTempSensor, Lcd* pLcd); 
+  AlarmTask(Button* pResetButton, Led* pRedLed,TempSensor* pTempSensor, Lcd* pLcd); 
   void tick();
 
 private:  
@@ -33,7 +33,6 @@ private:
 
   Button* pResetButton;
   Led* pRedLed;
-  Context* pContext;
   TempSensor* pTempSensor;
   Lcd* pLcd;
 };

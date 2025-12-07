@@ -1,5 +1,6 @@
 #include "Context.h"
 #include <Arduino.h>
+Context pContext;
 Context::Context(){
   started = false;
   stopped = false;
