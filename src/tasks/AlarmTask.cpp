@@ -22,6 +22,7 @@ void AlarmTask::tick(){
                 if(this->checkAndSetJustEntered()){
                     TempLesserT1Timestamp = 0;
                     //MsgService->sendMsg("HANGAR:IDLE");
+                    pContext.setToBeStopped(false);
                     pContext.setHangarState(Context::HangarState::IDLE);
                     Serial.println("[AA]:IDLE");
                 }

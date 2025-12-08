@@ -18,40 +18,37 @@ TakeOffTask::TakeOffTask(Sonar *pSonar, ServoMotor *pMotor,Lcd *pLcd)
  : pSonar(pSonar), pMotor(pMotor),pLcd(pLcd)
 {
     setState(State::IDLE);
+    setActive(true);
 }
 // DroneState{INSIDE,TAKE_OFF,OUTSIDE,LANDING}
 //  {IDLE, OPEN_DOOR, WAIT, TIMEOUT, EXITED}
 void TakeOffTask::tick()
 {
-    if (!pContext.isToBeStopped() && !isActive() && pContext.getDroneState() == Context::DroneState::INSIDE)
-    {
-        setActive(true);
-    }
     switch (state)
     {
     case State::IDLE:
     {
         if(this->checkAndSetJustEntered())
         {
-            Serial.println(F("IDLE"));
+            Serial.println(F("[TO]:IDLE"));
         }
-        if(MsgService.isMsgAvailable())
-        {
-            if(MsgService.receiveMsg(takeOffPattern))
+        if(pContext.getHangarState() == Context::HangarState::IDLE)
             {
-                pMotor->on();
-                pContext.setStarted();
-                pContext.setDroneState(Context::DroneState::TAKE_OFF);
-                setState(State::OPEN_DOOR);
+                pLcd->printAt(2,2,F("DRONE_INSIDE"));
+                if(pContext.getDroneState() == Context::DroneState::TAKE_OFF)
+                {
+                    setState(State::OPEN_DOOR);
+                    pMotor->on();
+                    pContext.setStarted();  
+                }
             }
-        }
     break;
     }
     case State::OPEN_DOOR:
     {
         if (this->checkAndSetJustEntered())
         {
-            Serial.println(F("OPEN_DOOR"));
+            Serial.println(F("[TO]:OPEN_DOOR"));
             //pContext.setDroneState(Context::DroneState::TAKE_OFF);
             pLcd->clear();
             pLcd->printAt(2, 2, F("TAKE_OFF"));
@@ -62,7 +59,11 @@ void TakeOffTask::tick()
         long dt = elapsedTimeInState();
         currentPos = (((float)dt) / OPEN_DOOR_TIME) * 180;
         pMotor->setPosition(currentPos);
-
+        if(pContext.getHangarState() == Context::HangarState::ALARM)
+        {
+            pMotor->setPosition(0);
+            setState(State::IDLE);
+        }
         if (dt > OPEN_DOOR_TIME)
         {
             setState(State::WAIT);
@@ -73,11 +74,16 @@ void TakeOffTask::tick()
     {
         if (this->checkAndSetJustEntered())
         {
-            Serial.println(F("WAIT"));
+            Serial.println(F("[TO]:WAIT"));
             distanceLessD1Timestamp = 0;
         }
         long dt = elapsedTimeInState();
         float readOut = pSonar->getDistance();
+        if(pContext.getHangarState() == Context::HangarState::ALARM)
+        {
+            pMotor->setPosition(0);
+            setState(State::IDLE);
+        }
         if (readOut < D1)
         {
             distanceLessD1Timestamp = dt;
@@ -96,14 +102,18 @@ void TakeOffTask::tick()
     {
         if (this->checkAndSetJustEntered())
         {
-            Serial.println(F("TIMEOUT"));
+            Serial.println(F("[TO]:TIMEOUT"));
         }
         /* update motor pos*/
         // close door needed
         long dt = elapsedTimeInState();
         currentPos = (((float)dt) / CLOSE_DOOR_TIME) * 180;
         pMotor->setPosition(currentPos);
-
+        if(pContext.getHangarState() == Context::HangarState::ALARM)
+        {
+            pMotor->setPosition(0);
+            setState(State::IDLE);
+        }
         if (dt > CLOSE_DOOR_TIME)
         {
             pMotor->off();
@@ -115,12 +125,13 @@ void TakeOffTask::tick()
     {
         if (this->checkAndSetJustEntered())
         {
-            Serial.println(F("EXITED"));
+            Serial.println(F("[TO]:EXITED"));
             pLcd->clear();
-            pLcd->printAt(2, 2, F("DRONE_OUT"));
+            pLcd->printAt(2, 2, F("DRONE_OUTSIDE"));
             pContext.setStopped();
             pContext.setDroneState(Context::DroneState::OUTSIDE);
         }
+        // closing door code 
         if (elapsedTimeInState() > RESET_TIME)
         {
             pMotor->off();

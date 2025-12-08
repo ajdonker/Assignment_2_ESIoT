@@ -27,26 +27,24 @@ void LandingTask::tick()
     {
         setActive(true);
     }
-    if (isActive())
+    switch (state)
     {
-        switch (state)
-        {
         case State::IDLE:
         {
             if(this->checkAndSetJustEntered())
             {
-                Serial.println(F("IDLE"));
+                Serial.println(F("[LO]:IDLE"));
             }
-            if(MsgService.isMsgAvailable())
-            {
-                if(MsgService.receiveMsg(landingPattern))
+            if(pContext.getHangarState() == Context::HangarState::IDLE) // if any alarm do nothing
                 {
-                    pMotor->on();
-                    pContext.setStarted();
-                    pContext.setDroneState(Context::DroneState::LANDING);
-                    setState(State::OPEN_DOOR);
+                    pLcd->printAt(2,2,F("DRONE_OUTSIDE"));
+                    if(pContext.getDroneState() == Context::DroneState::LANDING)
+                    {
+                        pMotor->on();
+                        pContext.setStarted();
+                        setState(State::OPEN_DOOR);
+                    }
                 }
-            }
         break;
         }
         case State::OPEN_DOOR:
@@ -59,11 +57,15 @@ void LandingTask::tick()
             }
 
             /* update motor pos*/
-
+            // add unconditional 
             long dt = elapsedTimeInState();
             currentPos = (((float)dt) / OPEN_DOOR_TIME) * 180;
             pMotor->setPosition(currentPos);
-
+            if(pContext.getHangarState() == Context::HangarState::ALARM)
+            {
+                pMotor->setPosition(0);
+                setState(State::IDLE);
+            }
             if (dt > OPEN_DOOR_TIME)
             {
                 setState(State::WAIT);
@@ -80,6 +82,11 @@ void LandingTask::tick()
             }
             long dt = elapsedTimeInState();
             float readOut = pSonar->getDistance();
+            if(pContext.getHangarState() == Context::HangarState::ALARM)
+            {
+                pMotor->setPosition(0);
+                setState(State::IDLE);
+            }
             if(dt - landingMsgTimestamp > LANDING_MSG_PERIOD)
             {
                 landingMsgTimestamp = dt;
@@ -110,7 +117,11 @@ void LandingTask::tick()
             long dt = elapsedTimeInState();
             currentPos = (((float)dt) / CLOSE_DOOR_TIME) * 180;
             pMotor->setPosition(currentPos);
-
+            if(pContext.getHangarState() == Context::HangarState::ALARM)
+            {
+                pMotor->setPosition(0);
+                setState(State::IDLE);
+            }
             if (dt > CLOSE_DOOR_TIME)
             {
                 pMotor->off();
@@ -126,8 +137,14 @@ void LandingTask::tick()
                 pLcd->clear();
                 pLcd->printAt(2, 2, F("DRONE_INSIDE"));
                 pContext.setStopped();
-                pContext.setDroneState(Context::DroneState::OUTSIDE);
+                pContext.setDroneState(Context::DroneState::INSIDE);
             }
+            if(pContext.getHangarState() == Context::HangarState::ALARM)
+            {
+                pMotor->setPosition(0);
+                setState(State::IDLE);
+            }
+            // closing door time
             if (elapsedTimeInState() > RESET_TIME)
             {
                 pMotor->off();
@@ -136,8 +153,8 @@ void LandingTask::tick()
             }
             break;
         }
-        }
     }
+    
 }
 
 void LandingTask::setState(State s)

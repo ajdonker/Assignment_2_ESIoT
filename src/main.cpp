@@ -47,11 +47,11 @@ void setup() {
 
 #ifndef __TESTING_HW__
   Task* pOnOffTask = new OnOffTask(pHWPlatform.getGreen1Led());
-  pOnOffTask->init();
+  pOnOffTask->init(500);
   Task* pTakeOffTask = new TakeOffTask(pHWPlatform.getSonar(),pHWPlatform.getMotor(),pHWPlatform.getLcd());
-  pTakeOffTask->init();
+  pTakeOffTask->init(500);
   Task* pAlarmTask = new AlarmTask(pHWPlatform.getButton(),pHWPlatform.getRedLed(),pHWPlatform.getTempSensor(),pHWPlatform.getLcd());
-  pAlarmTask->init();
+  pAlarmTask->init(100);
   Task* pBlinkingTask = new BlinkingTask(pHWPlatform.getGreen2Led());
   pBlinkingTask->init(500);
   Serial.println(F("Tasks inited"));
@@ -71,4 +71,5 @@ void setup() {
 
 void loop() {
     sched.schedule();
+    MsgService.handleMessages();
 }

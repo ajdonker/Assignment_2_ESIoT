@@ -12,22 +12,22 @@ HWPlatform::HWPlatform()
 void HWPlatform::init(Lcd* externalLcd) {
   // devices auto-init in constructors or when first used
   pButton     = new ButtonImpl(BT_PIN);
-  Serial.println(F("A"));
+  //Serial.println(F("A"));
   pRedLed     = new Led(RED_PIN);
-  Serial.println(F("B"));
+  //Serial.println(F("B"));
   pGreen1Led  = new Led(GREEN1_PIN);
-  Serial.println(F("C"));
+  //Serial.println(F("C"));
   pGreen2Led  = new Led(GREEN2_PIN);
-  Serial.println(F("D"));
+  //Serial.println(F("D"));
   pLcd = externalLcd;         // <-- MAIN LCD stored here
-  Serial.println(F("LCD linked"));
-  Serial.println(F("E"));
+  //Serial.println(F("LCD linked"));
+  //Serial.println(F("E"));
   pMotor      = new ServoMotorImpl(MOTOR_PIN);
-  Serial.println(F("F"));
+  //Serial.println(F("F"));
   pPir        = new Pir(PIR_PIN);
-  Serial.println(F("G"));
+  //Serial.println(F("G"));
   pSonar      = new Sonar(SONAR_ECHO_PIN, SONAR_TRIG_PIN, SONAR_TIMEOUT_TIME);
-  Serial.println(F("H"));
+  //Serial.println(F("H"));
   pTempSensor = new FakeTempSensor(TEMP_PIN);
 }
 
@@ -48,17 +48,17 @@ void HWPlatform::test() {
   pMotor->on();
   pMotor->setPosition(90);
 
-  Serial.println(F("Button:"));
-  Serial.println(btPressed ? F("pressed") : F("not pressed"));
+  //Serial.println(F("Button:"));
+  //Serial.println(btPressed ? F("pressed") : F("not pressed"));
 
-  Serial.println(F("Sonar readout:"));
-  Serial.println(pSonar->getDistance());
+  //Serial.println(F("Sonar readout:"));
+  //Serial.println(pSonar->getDistance());
 
-  Serial.println(F("Temp Sensor readout"));
-  Serial.println(pTempSensor->getTemperature());
+  //Serial.println(F("Temp Sensor readout"));
+  //Serial.println(pTempSensor->getTemperature());
 
-  Serial.println(F("PIR readout:"));
-  Serial.println(pPir->isDetected());
+  //Serial.println(F("PIR readout:"));
+  //Serial.println(pPir->isDetected());
 
   pLcd->printAt(2, 2, "HELLO");
 

@@ -7,13 +7,14 @@
 MsgServiceClass MsgService;
 
 bool MsgServiceClass::isMsgAvailable(){
-  if (msgAvailable) {
-      //  Serial.println("[DEBUG] isMsgAvailable = TRUE");
-    }
+  // if (msgAvailable) {
+  //     Serial.println("[DEBUG] isMsgAvailable = TRUE");
+  //   }
     return msgAvailable;
 }
 
 Msg* MsgServiceClass::receiveMsg(){
+  Serial.println(F("MSG"));
   if (msgAvailable){
     Msg* msg = currentMsg;
     //Serial.println(msg->getContent());
@@ -69,5 +70,26 @@ Msg* MsgServiceClass::receiveMsg(Pattern& pattern){
     return NULL; 
   } 
 }
-
+void MsgServiceClass::handleMessages(){
+  if (MsgService.isMsgAvailable()) {
+    Msg* msg = MsgService.receiveMsg();
+    Serial.print(F("Received message: "));
+    Serial.println(msg->getContent());
+    // can be made as msg.startswith 
+    if(msg->getContent() == "[DRU]:TAKE_OFF" && 
+        pContext.getHangarState() != Context::HangarState::ALARM &&
+        pContext.getHangarState() != Context::HangarState::PRE_ALARM) {
+        pContext.setDroneState(Context::DroneState::TAKE_OFF);
+    } else if(msg->getContent() == "[DRU]:LAND" && 
+              pContext.getHangarState() != Context::HangarState::ALARM &&
+              pContext.getHangarState() != Context::HangarState::PRE_ALARM) {
+        pContext.setDroneState(Context::DroneState::LANDING);
+    } 
+    // else if(msg->getContent().startsWith("FAKETEMP")) {
+    //   int fakeTemp = msg->getContent().substring(9).toInt();
+    //   pAlarmTask->setFakeTemperature(fakeTemp);
+    // }
+    delete msg;
+  }
+}
 

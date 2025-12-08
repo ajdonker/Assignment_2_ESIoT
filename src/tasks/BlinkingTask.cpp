@@ -20,7 +20,8 @@ void BlinkingTask::tick(){
             Serial.println(F("[BT] IDLE"));
 
         }
-        if (pContext.isStarted()){
+        Context::DroneState ds = pContext.getDroneState();
+        if (ds == Context::DroneState::TAKE_OFF || ds == Context::DroneState::LANDING){
             setState(State::OFF);
         }
         break;
@@ -30,7 +31,8 @@ void BlinkingTask::tick(){
             pGreen2Led->switchOff();
             Serial.println(F("[BT] OFF"));
         }
-        if (pContext.isStopped()){
+        Context::DroneState ds = pContext.getDroneState();
+        if (ds != Context::DroneState::TAKE_OFF && ds != Context::DroneState::LANDING){
             setState(State::IDLE);
         } else {
              setState(State::ON);
@@ -42,7 +44,8 @@ void BlinkingTask::tick(){
             pGreen2Led->switchOn();
             Serial.println(F("[BT] ON"));
         }
-        if (pContext.isStopped()){
+        Context::DroneState ds = pContext.getDroneState();
+        if (ds != Context::DroneState::TAKE_OFF && ds != Context::DroneState::LANDING){
             setState(State::IDLE);
         } else {
             setState(State::OFF);

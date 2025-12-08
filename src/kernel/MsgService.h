@@ -5,7 +5,7 @@
 #else
 #include "Arduino.h"
 #endif
-
+#include "model/Context.h"
 class Msg {
   String content;
 
@@ -40,6 +40,8 @@ public:
   
   void sendMsg(const String& msg);
   void SerialEvent();
+
+  void handleMessages();
 };
 
 extern MsgServiceClass MsgService;
