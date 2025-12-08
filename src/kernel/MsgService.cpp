@@ -4,6 +4,8 @@
 #include "Arduino.h"
 #endif
 #include "MsgService.h"
+#include "model/HWPlatform.h"
+// optional : does not fit the architecture to put here 
 MsgServiceClass MsgService;
 
 bool MsgServiceClass::isMsgAvailable(){
@@ -73,7 +75,7 @@ Msg* MsgServiceClass::receiveMsg(Pattern& pattern){
 void MsgServiceClass::handleMessages(){
   if (MsgService.isMsgAvailable()) {
     Msg* msg = MsgService.receiveMsg();
-
+    msg->getContent().trim();
     Serial.print(F("Received message: "));
     Serial.println(msg->getContent());
     // can be made as msg.startswith 
@@ -86,10 +88,14 @@ void MsgServiceClass::handleMessages(){
               pContext.getHangarState() != Context::HangarState::PRE_ALARM) {
         pContext.setDroneState(Context::DroneState::LANDING);
     } 
-    // else if(msg->getContent().startsWith("FAKETEMP")) {
-    //   int fakeTemp = msg->getContent().substring(9).toInt();
-    //   pAlarmTask->setFakeTemperature(fakeTemp);
-    // }
+    else if(msg->getContent().startsWith("[DRU]:TEMP")) {
+      String tempStr = msg->getContent().substring(11); // skip "[DRU]:TEMP:"
+      float fakeTemp = tempStr.toFloat();
+      Serial.print(F("Fake temperature received: "));
+      Serial.println(fakeTemp);
+
+      pHWPlatform.getTempSensor()->setTemperature(fakeTemp);
+    }
     delete msg;
   }
 }

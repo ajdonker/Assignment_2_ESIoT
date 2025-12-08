@@ -16,7 +16,9 @@ pResetButton(pResetButton),pRedLed(pRedLed),pTempSensor(pTempSensor),pLcd(pLcd)
 
 //enum class State{ IDLE, PRE_ALARM, ALARM };
 void AlarmTask::tick(){
-    if(pContext.getDroneState() != Context::DroneState::OUTSIDE){
+    // the assignment is unclear as to whether the task should not work at all when drone is outside. 
+    // if that is the case, alarm can never be sent outside to the drone as the task would not be on.
+    // if(pContext.getDroneState() != Context::DroneState::OUTSIDE){
         switch(state){
             case(State::IDLE):{
                 if(this->checkAndSetJustEntered()){
@@ -28,7 +30,7 @@ void AlarmTask::tick(){
                 }
                 long dt = elapsedTimeInState();
                 TempReadout = pTempSensor->getTemperature();
-                //Serial.println(TempReadout);
+                Serial.println(TempReadout);
                 if(TempReadout < Temp1)
                 {
                     TempLesserT1Timestamp = dt;
@@ -50,8 +52,8 @@ void AlarmTask::tick(){
                 TempReadout = pTempSensor->getTemperature();
                 Serial.print(F("Readout:"));
                 Serial.println(TempReadout);
-                Serial.println(TempLesserT2Timestamp);
-                Serial.println(dt);
+                // Serial.println(TempLesserT2Timestamp);
+                // Serial.println(dt);
                 if(TempReadout < Temp2)
                 {
                     TempLesserT2Timestamp = dt;
@@ -83,7 +85,7 @@ void AlarmTask::tick(){
                 break;
             }
         }
-    }
+    // }
 }
 void AlarmTask::setState(State s){
     state = s;

@@ -5,7 +5,7 @@ class TempSensor {
 
 public:
   virtual float getTemperature() = 0;
-  
+  virtual void setTemperature(float Temp) = 0;
 };
 
 

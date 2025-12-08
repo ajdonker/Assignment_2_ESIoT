@@ -40,5 +40,5 @@ private:
   Sonar *pSonar;
   FakeTempSensor *pTempSensor;
 };
-
+extern HWPlatform pHWPlatform;
 #endif
