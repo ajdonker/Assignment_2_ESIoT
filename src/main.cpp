@@ -12,10 +12,11 @@
 #include "tasks/AlarmTask.h"
 #include "tasks/TakeOffTask.h"
 #include "tasks/BlinkingTask.h"
+#include "tasks/LandingTask.h"
 #include "tasks/OnOffTask.h"
 #include "LiquidCrystal_I2C.h"
 #include "devices/Lcd.h"
-#define __TESTING_HW__
+//#define __TESTING_HW__
 Scheduler sched;
 LiquidCrystal_I2C lcd = LiquidCrystal_I2C(0x27,20,4); 
 HWPlatform pHWPlatform;
@@ -24,7 +25,7 @@ Lcd lcdWrapper(&lcd);
 void onDroneStateChangedHandler(Context::DroneState s) {
     // MsgService.sendMsg("DRONE:" + String(Context::droneStateName(s)));
     //Serial.print(F("DRONE:"));
-    //Serial.println(Context::droneStateName(s));
+    Serial.println(Context::droneStateName(s));
 }
 void serialEvent(){
   MsgService.SerialEvent();
@@ -52,11 +53,14 @@ void setup() {
   pAlarmTask->init(100);
   Task* pBlinkingTask = new BlinkingTask(pHWPlatform.getGreen2Led());
   pBlinkingTask->init(500);
+  Task* pLandingTask = new LandingTask(pHWPlatform.getSonar(),pHWPlatform.getMotor(),pHWPlatform.getLcd(),pHWPlatform.getPir());
+  pLandingTask->init(500);
   Serial.println(F("Tasks inited"));
   sched.addTask(pOnOffTask);
   sched.addTask(pTakeOffTask);
   sched.addTask(pAlarmTask);
   sched.addTask(pBlinkingTask);
+  sched.addTask(pLandingTask);
 #endif
 
 #ifdef __TESTING_HW__

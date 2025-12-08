@@ -6,16 +6,15 @@
 #endif
 #include "config.h"
 #include "../constants.h"
-// #include "kernel/Serial.printlnger.h"
-// #include "model/Context.h"
 #define OPEN_DOOR_TIME 2000
 #define CLOSE_DOOR_TIME 1000
 #define START_TIME 100
 #define RESET_TIME 500
 #define TIMEOUT_TIME 25000
 #define LANDING_MSG_PERIOD 2000
-LandingTask::LandingTask(Sonar *pSonar, ServoMotor *pMotor,Lcd *pLcd) : pSonar(pSonar), pMotor(pMotor), 
-pLcd(pLcd)
+#define PIR_DETECT_PERIOD 15000
+LandingTask::LandingTask(Sonar *pSonar, ServoMotor *pMotor,Lcd *pLcd,Pir *pPir) : pSonar(pSonar), pMotor(pMotor), 
+pLcd(pLcd),pPir(pPir)
 {
     setState(State::IDLE);
     setActive(true);
@@ -33,16 +32,39 @@ void LandingTask::tick()
                 Serial.println(F("[LO]:IDLE"));
             }
             if(pContext.getHangarState() == Context::HangarState::IDLE) // if any alarm do nothing
+            {
+                if(pContext.getDroneState() == Context::DroneState::OUTSIDE)
                 {
                     pLcd->printAt(2,2,F("DRONE_OUTSIDE"));
-                    if(pContext.getDroneState() == Context::DroneState::LANDING)
-                    {
-                        pMotor->on();
-                        pContext.setStarted();
-                        setState(State::OPEN_DOOR);
-                    }
                 }
+                else if(pContext.getDroneState() == Context::DroneState::LANDING)
+                {
+                    pMotor->on();
+                    pContext.setStarted();
+                    setState(State::OPEN_DOOR);
+                }
+            }
         break;
+        }
+        case State::WAIT_DETECT:
+        {
+            if(this->checkAndSetJustEntered())
+            {
+                Serial.println(F("[LO]:WAIT_DETECT"));
+            }
+            long dt = elapsedTimeInState();
+            bool detection = pPir->isDetected();
+            Serial.println(detection);
+            if(detection)
+            {
+                setState(State::OPEN_DOOR);
+            }
+            if(dt > PIR_DETECT_PERIOD)
+            {
+                pContext.setDroneState(Context::DroneState::OUTSIDE); // risky but no other way to implement
+                setState(State::IDLE);
+            }
+            break;
         }
         case State::OPEN_DOOR:
         {
@@ -84,18 +106,21 @@ void LandingTask::tick()
                 pMotor->setPosition(0);
                 setState(State::IDLE);
             }
-            if(dt - landingMsgTimestamp > LANDING_MSG_PERIOD)
+            if(readOut > 0)
             {
-                landingMsgTimestamp = dt;
-                MsgService.sendMsg("DIST:"+ String(readOut));
-            }
-            if (readOut >= D2)
-            {
-                distanceGreaterD2Timestamp = dt;
-            }
-            if (dt - distanceGreaterD2Timestamp > T2)
-            {
-                setState(State::ENTERED);
+                if(dt - landingMsgTimestamp > LANDING_MSG_PERIOD)
+                {
+                    landingMsgTimestamp = dt;
+                    MsgService.sendMsg("DIST:"+ String(readOut));
+                }
+                if (readOut >= D2)
+                {
+                    distanceGreaterD2Timestamp = dt;
+                }
+                if (dt - distanceGreaterD2Timestamp > T2)
+                {
+                    setState(State::ENTERED);
+                }
             }
             if (dt > TIMEOUT_TIME)
             {
@@ -146,7 +171,7 @@ void LandingTask::tick()
             {
                 pMotor->off();
                 setState(State::IDLE);
-                setActive(false);
+                //setActive(false);
             }
             break;
         }

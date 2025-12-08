@@ -34,8 +34,11 @@ void TakeOffTask::tick()
         }
         if(pContext.getHangarState() == Context::HangarState::IDLE)
             {
-                pLcd->printAt(2,2,F("DRONE_INSIDE"));
-                if(pContext.getDroneState() == Context::DroneState::TAKE_OFF)
+                if(pContext.getDroneState() == Context::DroneState::INSIDE)
+                {
+                    pLcd->printAt(2,2,F("DRONE_INSIDE"));
+                }
+                else if(pContext.getDroneState() == Context::DroneState::TAKE_OFF)
                 {
                     setState(State::OPEN_DOOR);
                     pMotor->on();
@@ -85,9 +88,12 @@ void TakeOffTask::tick()
             pMotor->setPosition(0);
             setState(State::IDLE);
         }
-        if (readOut < D1)
+        if(readOut > 0)
         {
-            distanceLessD1Timestamp = dt;
+            if (readOut < D1)
+            {
+                distanceLessD1Timestamp = dt;
+            }
         }
         if (dt - distanceLessD1Timestamp > T1)
         {
@@ -137,7 +143,6 @@ void TakeOffTask::tick()
         {
             pMotor->off();
             setState(State::IDLE);
-            setActive(false);
         }
         break;
     }
