@@ -73,14 +73,15 @@ Msg* MsgServiceClass::receiveMsg(Pattern& pattern){
 void MsgServiceClass::handleMessages(){
   if (MsgService.isMsgAvailable()) {
     Msg* msg = MsgService.receiveMsg();
+
     Serial.print(F("Received message: "));
     Serial.println(msg->getContent());
     // can be made as msg.startswith 
-    if(msg->getContent() == "[DRU]:TAKE_OFF" && 
+    if(msg->getContent().indexOf("[DRU]:TAKE_OFF") != -1  && 
         pContext.getHangarState() != Context::HangarState::ALARM &&
         pContext.getHangarState() != Context::HangarState::PRE_ALARM) {
         pContext.setDroneState(Context::DroneState::TAKE_OFF);
-    } else if(msg->getContent() == "[DRU]:LAND" && 
+    } else if(msg->getContent().indexOf("[DRU]:LAND") != -1  && 
               pContext.getHangarState() != Context::HangarState::ALARM &&
               pContext.getHangarState() != Context::HangarState::PRE_ALARM) {
         pContext.setDroneState(Context::DroneState::LANDING);

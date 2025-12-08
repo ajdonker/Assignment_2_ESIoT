@@ -41,7 +41,7 @@ void LandingTask::tick()
                 {
                     pMotor->on();
                     pContext.setStarted();
-                    setState(State::OPEN_DOOR);
+                    setState(State::WAIT_DETECT);
                 }
             }
         break;
@@ -51,8 +51,10 @@ void LandingTask::tick()
             if(this->checkAndSetJustEntered())
             {
                 Serial.println(F("[LO]:WAIT_DETECT"));
+                pPir->calibrate();
             }
             long dt = elapsedTimeInState();
+            pPir->sync();
             bool detection = pPir->isDetected();
             Serial.println(detection);
             if(detection)
@@ -148,6 +150,7 @@ void LandingTask::tick()
             {
                 pMotor->off();
                 setState(State::IDLE);
+                pContext.setDroneState(Context::DroneState::OUTSIDE);
             }
             break;
         }

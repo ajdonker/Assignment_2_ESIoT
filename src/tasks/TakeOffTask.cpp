@@ -125,6 +125,7 @@ void TakeOffTask::tick()
         {
             pMotor->off();
             setState(State::IDLE);
+            pContext.setDroneState(Context::DroneState::INSIDE);
         }
         break;
     }
