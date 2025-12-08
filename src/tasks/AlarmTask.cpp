@@ -27,7 +27,8 @@ void AlarmTask::tick(){
                     Serial.println("[AA]:IDLE");
                 }
                 long dt = elapsedTimeInState();
-                float TempReadout = pTempSensor->getTemperature();
+                TempReadout = pTempSensor->getTemperature();
+                //Serial.println(TempReadout);
                 if(TempReadout < Temp1)
                 {
                     TempLesserT1Timestamp = dt;
@@ -40,17 +41,22 @@ void AlarmTask::tick(){
             }
             case(State::PRE_ALARM):{
                 if(this->checkAndSetJustEntered()){
+                    TempLesserT2Timestamp = elapsedTimeInState();
                     pContext.setToBeStopped(true);
                     pContext.setHangarState(Context::HangarState::PRE_ALARM);
                     Serial.println("[AA]:PRE_ALARM");
                 }
                 long dt = elapsedTimeInState();
-                float TempReadout = pTempSensor->getTemperature();
+                TempReadout = pTempSensor->getTemperature();
+                Serial.print(F("Readout:"));
+                Serial.println(TempReadout);
+                Serial.println(TempLesserT2Timestamp);
+                Serial.println(dt);
                 if(TempReadout < Temp2)
                 {
-                    TempLesserT1Timestamp = dt;
+                    TempLesserT2Timestamp = dt;
                 }
-                if(dt - TempLesserT1Timestamp > T4)
+                if(dt - TempLesserT2Timestamp > T4)
                 {
                     setState(State::ALARM);
                 }

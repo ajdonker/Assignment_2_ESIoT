@@ -23,9 +23,12 @@ HWPlatform pHWPlatform;
 Lcd lcdWrapper(&lcd);
 // Context *pContext;
 void onDroneStateChangedHandler(Context::DroneState s) {
-    // MsgService.sendMsg("DRONE:" + String(Context::droneStateName(s)));
-    //Serial.print(F("DRONE:"));
     Serial.println(Context::droneStateName(s));
+    Serial.flush();
+}
+void onHangarStateChangedHandler(Context::HangarState s){
+  Serial.println(Context::hangarStateName(s));
+  Serial.flush();
 }
 void serialEvent(){
   MsgService.SerialEvent();
@@ -41,6 +44,7 @@ void setup() {
   pHWPlatform.init(&lcdWrapper);
   pContext.reset();
   pContext.onDroneStateChanged = onDroneStateChangedHandler;
+  pContext.onHangarStateChanged = onHangarStateChangedHandler;
   Serial.println(F("handler"));
   Serial.println(F("HW init"));
 

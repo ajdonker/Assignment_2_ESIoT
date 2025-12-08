@@ -30,6 +30,8 @@ private:
   long stateTimestamp;
   bool justEntered;
   long TempLesserT1Timestamp;
+  long TempLesserT2Timestamp;
+  float TempReadout;
 
   Button* pResetButton;
   Led* pRedLed;
