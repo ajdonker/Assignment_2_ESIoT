@@ -29,7 +29,7 @@ void BlinkingTask::tick(){
     case State::OFF: {
         if (this->checkAndSetJustEntered()){
             pGreen2Led->switchOff();
-            Serial.println(F("[BT] OFF"));
+            //Serial.println(F("[BT] OFF"));
         }
         Context::DroneState ds = pContext.getDroneState();
         if (ds != Context::DroneState::TAKE_OFF && ds != Context::DroneState::LANDING){
@@ -42,7 +42,7 @@ void BlinkingTask::tick(){
     case State::ON: {
         if (this->checkAndSetJustEntered()){
             pGreen2Led->switchOn();
-            Serial.println(F("[BT] ON"));
+            //Serial.println(F("[BT] ON"));
         }
         Context::DroneState ds = pContext.getDroneState();
         if (ds != Context::DroneState::TAKE_OFF && ds != Context::DroneState::LANDING){

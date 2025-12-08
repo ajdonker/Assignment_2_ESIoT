@@ -9,7 +9,7 @@ const int T4 = 10000;
 const int TIMEOUT = 20000;
 const float Temp1 = 30.0;
 const float Temp2 = 40.0;
-const float D1 = 30.0; //cm?? 
+const float D1 = 0.2; //cm?? 
 const float D2 = 3.0;
 
 #endif

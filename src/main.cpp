@@ -15,14 +15,16 @@
 #include "tasks/OnOffTask.h"
 #include "LiquidCrystal_I2C.h"
 #include "devices/Lcd.h"
+#define __TESTING_HW__
 Scheduler sched;
 LiquidCrystal_I2C lcd = LiquidCrystal_I2C(0x27,20,4); 
 HWPlatform pHWPlatform;
+Lcd lcdWrapper(&lcd);
 // Context *pContext;
 void onDroneStateChangedHandler(Context::DroneState s) {
     // MsgService.sendMsg("DRONE:" + String(Context::droneStateName(s)));
-    Serial.print(F("DRONE:"));
-    Serial.println(Context::droneStateName(s));
+    //Serial.print(F("DRONE:"));
+    //Serial.println(Context::droneStateName(s));
 }
 void serialEvent(){
   MsgService.SerialEvent();
@@ -31,19 +33,15 @@ void setup() {
   Serial.begin(115200);
   lcd.init();
   lcd.backlight();
-  Lcd lcdWrapper(&lcd);
   delay(100);
   MsgService.init();
   Serial.println(F("init"));
   sched.init(50);
+  pHWPlatform.init(&lcdWrapper);
   pContext.reset();
-  //Serial.println(F("context inited"));
   pContext.onDroneStateChanged = onDroneStateChangedHandler;
   Serial.println(F("handler"));
-  // pHWPlatform = new HWPlatform();
-  pHWPlatform.init(&lcdWrapper);
   Serial.println(F("HW init"));
-  // Serial.println(freeMemory());
 
 #ifndef __TESTING_HW__
   Task* pOnOffTask = new OnOffTask(pHWPlatform.getGreen1Led());

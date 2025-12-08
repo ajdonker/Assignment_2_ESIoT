@@ -48,17 +48,17 @@ void HWPlatform::test() {
   pMotor->on();
   pMotor->setPosition(90);
 
-  //Serial.println(F("Button:"));
-  //Serial.println(btPressed ? F("pressed") : F("not pressed"));
+  Serial.println(F("Button:"));
+  Serial.println(btPressed ? F("pressed") : F("not pressed"));
 
-  //Serial.println(F("Sonar readout:"));
-  //Serial.println(pSonar->getDistance());
+  Serial.println(F("Sonar readout:"));
+  Serial.println(pSonar->getDistance());
 
-  //Serial.println(F("Temp Sensor readout"));
-  //Serial.println(pTempSensor->getTemperature());
+  Serial.println(F("Temp Sensor readout"));
+  Serial.println(pTempSensor->getTemperature());
 
-  //Serial.println(F("PIR readout:"));
-  //Serial.println(pPir->isDetected());
+  Serial.println(F("PIR readout:"));
+  Serial.println(pPir->isDetected());
 
   pLcd->printAt(2, 2, "HELLO");
 

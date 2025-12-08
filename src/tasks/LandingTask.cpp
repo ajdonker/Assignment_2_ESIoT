@@ -18,15 +18,12 @@ LandingTask::LandingTask(Sonar *pSonar, ServoMotor *pMotor,Lcd *pLcd) : pSonar(p
 pLcd(pLcd)
 {
     setState(State::IDLE);
+    setActive(true);
 }
 // DroneState{INSIDE,TAKE_OFF,OUTSIDE,LANDING}
 //  {IDLE, OPEN_DOOR, WAIT, TIMEOUT, ENTERED}
 void LandingTask::tick()
 {
-    if (!pContext.isToBeStopped() && !isActive() && pContext.getDroneState() == Context::DroneState::OUTSIDE)
-    {
-        setActive(true);
-    }
     switch (state)
     {
         case State::IDLE:

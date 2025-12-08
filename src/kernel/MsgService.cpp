@@ -14,7 +14,7 @@ bool MsgServiceClass::isMsgAvailable(){
 }
 
 Msg* MsgServiceClass::receiveMsg(){
-  Serial.println(F("MSG"));
+  //Serial.println(F("MSG"));
   if (msgAvailable){
     Msg* msg = currentMsg;
     //Serial.println(msg->getContent());

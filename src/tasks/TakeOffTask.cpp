@@ -79,6 +79,7 @@ void TakeOffTask::tick()
         }
         long dt = elapsedTimeInState();
         float readOut = pSonar->getDistance();
+        Serial.println(readOut);
         if(pContext.getHangarState() == Context::HangarState::ALARM)
         {
             pMotor->setPosition(0);
