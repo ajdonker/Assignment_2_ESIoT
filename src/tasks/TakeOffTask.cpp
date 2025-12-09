@@ -67,7 +67,7 @@ void TakeOffTask::tick()
                 pMotor->setPosition(0);
                 setState(State::IDLE);
             }
-            if (dt > OPEN_DOOR_TIME)
+            else if (dt > OPEN_DOOR_TIME)
             {
                 setState(State::WAIT);
             }
@@ -82,12 +82,6 @@ void TakeOffTask::tick()
             }
             long dt = elapsedTimeInState();
             float readOut = pSonar->getDistance();
-            Serial.println(readOut);
-            if(pContext.getHangarState() == Context::HangarState::ALARM)
-            {
-                pMotor->setPosition(0);
-                setState(State::IDLE);
-            }
             if(readOut > 0)
             {
                 if (readOut < D1)
@@ -95,11 +89,17 @@ void TakeOffTask::tick()
                     distanceLessD1Timestamp = dt;
                 }
             }
-            if (dt - distanceLessD1Timestamp > T1)
+            Serial.println(readOut);
+            if(pContext.getHangarState() == Context::HangarState::ALARM)
+            {
+                pMotor->setPosition(0);
+                setState(State::IDLE);
+            }
+            else if(dt - distanceLessD1Timestamp > T1)
             {
                 setState(State::EXITED);
             }
-            if (dt > TIMEOUT_TIME)
+            else if(dt > TIMEOUT_TIME)
             {
                 setState(State::TIMEOUT);
             }
@@ -121,7 +121,7 @@ void TakeOffTask::tick()
                 pMotor->setPosition(0);
                 setState(State::IDLE);
             }
-            if (dt > CLOSE_DOOR_TIME)
+            else if (dt > CLOSE_DOOR_TIME)
             {
                 pMotor->off();
                 setState(State::IDLE);

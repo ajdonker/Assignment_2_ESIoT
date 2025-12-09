@@ -20,7 +20,7 @@ pLcd(pLcd),pPir(pPir)
     setActive(true);
 }
 // DroneState{INSIDE,TAKE_OFF,OUTSIDE,LANDING}
-//  {IDLE, OPEN_DOOR, WAIT, TIMEOUT, ENTERED}
+//  {IDLE, OPEN_DOOR,WAIT_DETECT, WAIT, TIMEOUT, ENTERED}
 void LandingTask::tick()
 {
     switch (state)
@@ -51,7 +51,7 @@ void LandingTask::tick()
             if(this->checkAndSetJustEntered())
             {
                 Serial.println(F("[LO]:WAIT_DETECT"));
-                pPir->calibrate();
+                //pPir->calibrate();
             }
             long dt = elapsedTimeInState();
             pPir->sync();
@@ -61,7 +61,8 @@ void LandingTask::tick()
             {
                 setState(State::OPEN_DOOR);
             }
-            if(dt > PIR_DETECT_PERIOD)
+            // optionally, if still not detected drone dont even start the land/takeoff
+            if(dt > PIR_DETECT_PERIOD || pContext.isToBeStopped())
             {
                 pContext.setDroneState(Context::DroneState::OUTSIDE); // risky but no other way to implement
                 setState(State::IDLE);
@@ -87,7 +88,7 @@ void LandingTask::tick()
                 pMotor->setPosition(0);
                 setState(State::IDLE);
             }
-            if (dt > OPEN_DOOR_TIME)
+            else if (dt > OPEN_DOOR_TIME)
             {
                 setState(State::WAIT);
             }
@@ -108,7 +109,7 @@ void LandingTask::tick()
                 pMotor->setPosition(0);
                 setState(State::IDLE);
             }
-            if(readOut > 0)
+            else if(readOut > 0)
             {
                 if(dt - landingMsgTimestamp > LANDING_MSG_PERIOD)
                 {
@@ -124,7 +125,7 @@ void LandingTask::tick()
                     setState(State::ENTERED);
                 }
             }
-            if (dt > TIMEOUT_TIME)
+            else if (dt > TIMEOUT_TIME)
             {
                 setState(State::TIMEOUT);
             }
@@ -146,7 +147,7 @@ void LandingTask::tick()
                 pMotor->setPosition(0);
                 setState(State::IDLE);
             }
-            if (dt > CLOSE_DOOR_TIME)
+            else if (dt > CLOSE_DOOR_TIME)
             {
                 pMotor->off();
                 setState(State::IDLE);
@@ -169,7 +170,6 @@ void LandingTask::tick()
                 pMotor->setPosition(0);
                 setState(State::IDLE);
             }
-            // closing door time
             if (elapsedTimeInState() > RESET_TIME)
             {
                 pMotor->off();

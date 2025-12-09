@@ -32,7 +32,10 @@ void BlinkingTask::tick(){
             //Serial.println(F("[BT] OFF"));
         }
         Context::DroneState ds = pContext.getDroneState();
-        if (ds != Context::DroneState::TAKE_OFF && ds != Context::DroneState::LANDING){
+        if(pContext.getHangarState() == Context::HangarState::ALARM){
+            setState(State::IDLE);
+        }
+        else if (ds != Context::DroneState::TAKE_OFF && ds != Context::DroneState::LANDING){
             setState(State::IDLE);
         } else {
              setState(State::ON);
@@ -45,7 +48,10 @@ void BlinkingTask::tick(){
             //Serial.println(F("[BT] ON"));
         }
         Context::DroneState ds = pContext.getDroneState();
-        if (ds != Context::DroneState::TAKE_OFF && ds != Context::DroneState::LANDING){
+        if(pContext.getHangarState() == Context::HangarState::ALARM){
+            setState(State::IDLE);
+        }
+        else if (ds != Context::DroneState::TAKE_OFF && ds != Context::DroneState::LANDING){
             setState(State::IDLE);
         } else {
             setState(State::OFF);

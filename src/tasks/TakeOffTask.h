@@ -8,7 +8,6 @@
 #include "model/Context.h"
 #include "devices/Lcd.h"
 #include "devices/Sonar.h"
-#include "TakeOffPattern.h"
 #ifdef __FAKE_UNO__
 #include "FakeArduino.h"
 #else
@@ -36,7 +35,6 @@ private:
   Lcd* pLcd;
   //MsgServiceClass* pMsgService;
 
-  TakeOffPattern takeOffPattern;
   uint8_t currentPos;
   long distanceLessD1Timestamp;
   bool toBeStopped;

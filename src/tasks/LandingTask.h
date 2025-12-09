@@ -9,7 +9,6 @@
 #include "devices/Lcd.h"
 #include "devices/Sonar.h"
 #include "devices/Pir.h"
-#include "LandingPattern.h"
 #ifdef __FAKE_UNO__
 #include "FakeArduino.h"
 #else
@@ -36,7 +35,6 @@ private:
   ServoMotor* pMotor;
   Lcd* pLcd;  
   Pir* pPir;
-  LandingPattern landingPattern;
   int currentPos;
   long distanceGreaterD2Timestamp;
   long landingMsgTimestamp;

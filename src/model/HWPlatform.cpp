@@ -25,6 +25,7 @@ void HWPlatform::init(Lcd* externalLcd) {
   pMotor      = new ServoMotorImpl(MOTOR_PIN);
   //Serial.println(F("F"));
   pPir        = new Pir(PIR_PIN);
+  pPir->calibrate();
   //Serial.println(F("G"));
   pSonar      = new Sonar(SONAR_ECHO_PIN, SONAR_TRIG_PIN, SONAR_TIMEOUT_TIME);
   //Serial.println(F("H"));

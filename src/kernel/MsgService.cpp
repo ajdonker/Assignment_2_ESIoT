@@ -56,22 +56,6 @@ void MsgServiceClass::SerialEvent() {
     }
   }
 }
-
-bool MsgServiceClass::isMsgAvailable(Pattern& pattern){
-  return (msgAvailable && pattern.match(*currentMsg));
-}
-
-Msg* MsgServiceClass::receiveMsg(Pattern& pattern){
-  if (msgAvailable && pattern.match(*currentMsg)){
-    Msg* msg = currentMsg;
-    msgAvailable = false;
-    currentMsg = NULL;
-    content = "";
-    return msg;  
-  } else {
-    return NULL; 
-  } 
-}
 void MsgServiceClass::handleMessages(){
   if (MsgService.isMsgAvailable()) {
     Msg* msg = MsgService.receiveMsg();
@@ -82,11 +66,17 @@ void MsgServiceClass::handleMessages(){
     if(msg->getContent().indexOf("[DRU]:TAKE_OFF") != -1  && 
         pContext.getHangarState() != Context::HangarState::ALARM &&
         pContext.getHangarState() != Context::HangarState::PRE_ALARM) {
-        pContext.setDroneState(Context::DroneState::TAKE_OFF);
+        if(pContext.getDroneState() == Context::DroneState::INSIDE)
+        {
+          pContext.setDroneState(Context::DroneState::TAKE_OFF);
+        }
     } else if(msg->getContent().indexOf("[DRU]:LAND") != -1  && 
               pContext.getHangarState() != Context::HangarState::ALARM &&
               pContext.getHangarState() != Context::HangarState::PRE_ALARM) {
-        pContext.setDroneState(Context::DroneState::LANDING);
+        if(pContext.getDroneState() == Context::DroneState::OUTSIDE)
+        {
+          pContext.setDroneState(Context::DroneState::LANDING);
+        }
     } 
     else if(msg->getContent().startsWith("[DRU]:TEMP")) {
       String tempStr = msg->getContent().substring(11); // skip "[DRU]:TEMP:"
